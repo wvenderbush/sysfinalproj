@@ -1,0 +1,36 @@
+Approval: 
+
+Final Project Design Document 
+-----------------------------
+
+* Winston Venderbush, Max Bertfield, Jack Schluger * 
+
+Abstract/Description: 
+	We will be making a functional and feature-rich IRC style chat client. The 'server' for our project will run on a single machine. Clients will be able to connect to the server, which will fork off individual processes to handle each client connection. Messages will be sent to and appear in a chatroom style interface. We may also create algorithms to route messages to different chatrooms (either all hosted on the original server, or hosted on seperate servers) to allow for communication in and easy transitions between chat rooms. Our platform will also include features to make chatting more fun, including a unique markup language for styling and coloring text, as well as an ASCII emoji system!
+
+User Interface:
+	Users will be prompted to choose a username and connect to a server on their local network with that server's local IP address. Once connected, the user, aliased as their chosen username, will be directed into a chatroom where they will be able to send and receive stylish colorized chat messages from other users on the server. The chatroom and chat history will be maintained as long as the server continues to run the chatroom. 
+
+
+Technical Design:
+
+	Topics: Networking, Server/Client Frameworks and Handshakes, String Manipulation, Memory Management, File I/O
+
+	Delegation:
+		Max: Server/Client interactions, Networking
+		Jack: Networking, Server 
+		Winston: Chat markup, UI and display, 
+
+	Data Structures: Pipes
+
+	Algorithms: Handshake algorithm, Text markup algorithms, Message routing algorithm
+
+
+Timeline:
+
+	Jan. 6 -- Design Document complete
+	Jan. 9 -- Basic server/client functional, network capabilities researched, basic display algorithms/libraries functional
+	Jan. 12 -- Server/Client handshake working over network, display libraries implemented and functioning
+	Jan. 17 -- Chatroom functional, displays functional
+	Jan. 19 -- Multi-server routing implemented
+	Jan. 20, etc. -- Bugfixes, make sure it all works as intended before submissions
