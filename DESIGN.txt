@@ -21,9 +21,9 @@ Technical Design:
 		Jack: Networking, Server 
 		Winston: Chat markup, UI and display, 
 
-	Data Structures: Pipes
+	Data Structures: Primitives, Pipes, Arrays, Files, 
 
-	Algorithms: Handshake algorithm, Text markup algorithms, Message routing algorithm
+	Algorithms: Handshake algorithm, Text markup and management algorithms, Message routing algorithm, ASCII emoji algorithm
 
 
 Timeline:
