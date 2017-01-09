@@ -3,12 +3,6 @@
 DW: APPROVED
 ============================
 
-
-
-
-
-Approval: 
-
 Final Project Design Document 
 -----------------------------
 
@@ -38,8 +32,8 @@ Technical Design:
 Timeline:
 
 	Jan. 6 -- Design Document complete
-	Jan. 9 -- Basic server/client functional, network capabilities researched, basic display algorithms/libraries functional
-	Jan. 12 -- Server/Client handshake working over network, display libraries implemented and functioning
-	Jan. 17 -- Chatroom functional, displays functional
-	Jan. 19 -- Multi-server routing implemented
-	Jan. 20, etc. -- Bugfixes, make sure it all works as intended before submissions
+	Jan. 12 -- Basic server/client functional, network capabilities researched, basic display algorithms/libraries functional
+	Jan. 17 -- Server/Client handshake working over network, display libraries implemented and functioning
+	Jan. 19 -- Chatroom functional, displays functional
+	Jan. 20 -- Multi-server routing implemented
+	Jan. 24, etc. -- Bugfixes, make sure it all works as intended before submissions
