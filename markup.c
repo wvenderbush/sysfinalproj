@@ -13,6 +13,26 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
+#define SMILEY     "ʘ‿ʘ"
+#define SHRUG		"¯\\_(ツ)_/¯"
+#define SCARED		"⊙﹏⊙"
+#define DISAPPROVE	"ಠ_ಠ"
+#define CUTE		"(｡◕‿◕｡)"
+#define EXCITED		"ヽ(´▽`)/"
+#define DEVIOUS		"ಠ‿ಠ"
+#define TABLEFLIP	"(╯°□°）╯︵ ┻━┻"
+#define CAT 		"^ᵒᴥᵒ^"
+#define FIGHT		"ლ(｀ー´ლ)"
+#define BEAR 		"ʕ•ᴥ•ʔ"
+#define BLOB 		"༼ つ ◕_◕ ༽つ"
+#define CRY 		"ಥ_ಥ"
+#define LOVE 		"(づ￣ ³￣)づ"
+#define CONFUSED	"(⊙_☉)"
+#define FIGHTME		"(ง •̀_•́)ง"
+#define HIDING 		"|_・)"
+#define SLEEP 		"(ᴗ˳ᴗ)"
+
+
 char * multitok(char *input, char *delimiter){
     static char *string;
     if (input != NULL)
@@ -41,6 +61,9 @@ char * parse(char *input){ //multiple tags in one line (ie. 2 ::red:: breaks the
 		char output[1024];
 		char *start = multitok(input, "::red::");
 		char *end = multitok(NULL, "::red::");
+		printf("%s\n", start);
+		printf("%s\n", end);
+		printf("%s\n", end2);
 		strcpy(output, start);
 		strcat(output, ANSI_COLOR_RED);
 		strcat(output, end);
@@ -129,9 +152,11 @@ int main(int argc, char const *argv[]) {
   printf(ANSI_COLOR_MAGENTA "This text is MAGENTA!" ANSI_COLOR_RESET "\n");
   printf(ANSI_COLOR_CYAN    "This text is CYAN!"    ANSI_COLOR_RESET "\n\n\n");
 
-  char test[] = "This text is ::red::red ::green::and ::magenta::this is ::cyan::blue";
+  char test[] = "This text is ::red::red ::red::and ::magenta::this is ::cyan::blue";
 
   printf("%s\n", multiparse(test));
+  printf("%s\n", SMILEY);
+  printf("%s\n", SHRUG);
 
   return 0;
 }
