@@ -33,103 +33,85 @@
 #define SLEEP 		"(ᴗ˳ᴗ)"
 
 
-char * multitok(char *input, char *delimiter){
-    static char *string;
-    if (input != NULL)
-        string = input;
 
-    if (string == NULL)
-        return string;
-
-    char *end = strstr(string, delimiter);
-    if (end == NULL) {
-        char *temp = string;
-        string = NULL;
-        return temp;
-    }
-
-    char *temp = string;
-
-    *end = '\0';
-    string = end + strlen(delimiter);
-    return temp;
-}
-
-
-char * parse(char *input){ //multiple tags in one line (ie. 2 ::red:: breaks the code because of multitok)
+char * parse(char *input){
 	if (strstr(input, "::red::") != NULL){
 		char output[1024];
-		char *start = multitok(input, "::red::");
-		char *end = multitok(NULL, "::red::");
-		printf("%s\n", start);
-		printf("%s\n", end);
-		printf("%s\n", end2);
-		strcpy(output, start);
+		char *start = strstr(input, "::red::");
+		char *end = start;
+		end = end + strlen("::red::");
+		start[0] = '\0';
+		strcpy(output, input);
 		strcat(output, ANSI_COLOR_RED);
 		strcat(output, end);
-		strcat(output, ANSI_COLOR_RESET);
 		return output;
 	}
 	else if (strstr(input, "::green::") != NULL){
 		char output[1024];
-		char *start = multitok(input, "::green::");
-		char *end = multitok(NULL, "::green::");
-		strcpy(output, start);
+		char *start = strstr(input, "::green::");
+		char *end = start;
+		end = end + strlen("::green::");
+		start[0] = '\0';
+		strcpy(output, input);
 		strcat(output, ANSI_COLOR_GREEN);
 		strcat(output, end);
-		strcat(output, ANSI_COLOR_RESET);
 		return output;
 	}
 	else if (strstr(input, "::yellow::") != NULL){
 		char output[1024];
-		char *start = multitok(input, "::yellow::");
-		char *end = multitok(NULL, "::yellow::");
-		strcpy(output, start);
+		char *start = strstr(input, "::yellow::");
+		char *end = start;
+		end = end + strlen("::yellow::");
+		start[0] = '\0';
+		strcpy(output, input);
 		strcat(output, ANSI_COLOR_YELLOW);
 		strcat(output, end);
-		strcat(output, ANSI_COLOR_RESET);
 		return output;
 	}
 	else if (strstr(input, "::blue::") != NULL){
 		char output[1024];
-		char *start = multitok(input, "::blue::");
-		char *end = multitok(NULL, "::blue::");
-		strcpy(output, start);
+		char *start = strstr(input, "::blue::");
+		char *end = start;
+		end = end + strlen("::blue::");
+		start[0] = '\0';
+		strcpy(output, input);
 		strcat(output, ANSI_COLOR_BLUE);
 		strcat(output, end);
-		strcat(output, ANSI_COLOR_RESET);
 		return output;
 	}
 	else if (strstr(input, "::magenta::") != NULL){
 		char output[1024];
-		char *start = multitok(input, "::magenta::");
-		char *end = multitok(NULL, "::magenta::");
-		strcpy(output, start);
+		char *start = strstr(input, "::magenta::");
+		char *end = start;
+		end = end + strlen("::magenta::");
+		start[0] = '\0';
+		strcpy(output, input);
 		strcat(output, ANSI_COLOR_MAGENTA);
 		strcat(output, end);
-		strcat(output, ANSI_COLOR_RESET);
 		return output;
 
 	}
 	else if (strstr(input, "::cyan::") != NULL){
 		char output[1024];
-		char *start = multitok(input, "::cyan::");
-		char *end = multitok(NULL, "::cyan::");
-		strcpy(output, start);
+		char *start = strstr(input, "::cyan::");
+		char *end = start;
+		end = end + strlen("::cyan::");
+		start[0] = '\0';
+		strcpy(output, input);
 		strcat(output, ANSI_COLOR_CYAN);
 		strcat(output, end);
-		strcat(output, ANSI_COLOR_RESET);
 		return output;
 
 	}
 	else if (strstr(input, "::basic::") != NULL){
 		char output[1024];
-		char *start = multitok(input, "::basic::");
-		char *end = multitok(NULL, "::basic::");
-		strcpy(output, start);
+		char *start = strstr(input, "::basic::");
+		char *end = start;
+		end = end + strlen("::basic::");
+		start[0] = '\0';
+		strcpy(output, input);
 		strcat(output, ANSI_COLOR_RESET);
 		strcat(output, end);
-		strcat(output, ANSI_COLOR_RESET);
 		return output;
 	}
 	return input;
@@ -140,23 +122,24 @@ char * multiparse(char *input){
 		char *new = parse(input);
 		strcpy(input, new);
 	}
+	strcat(input, ANSI_COLOR_RESET);
 	return input;
 }
 
 int main(int argc, char const *argv[]) {
 
-  printf(ANSI_COLOR_RED     "This text is RED!"     ANSI_COLOR_RESET "\n");
-  printf(ANSI_COLOR_GREEN   "This text is GREEN!"   ANSI_COLOR_RESET "\n");
-  printf(ANSI_COLOR_YELLOW  "This text is YELLOW!"  ANSI_COLOR_RESET "\n");
-  printf(ANSI_COLOR_BLUE    "This text is BLUE!"    ANSI_COLOR_RESET "\n");
-  printf(ANSI_COLOR_MAGENTA "This text is MAGENTA!" ANSI_COLOR_RESET "\n");
-  printf(ANSI_COLOR_CYAN    "This text is CYAN!"    ANSI_COLOR_RESET "\n\n\n");
+  // printf(ANSI_COLOR_RED     "This text is RED!"     ANSI_COLOR_RESET "\n");
+  // printf(ANSI_COLOR_GREEN   "This text is GREEN!"   ANSI_COLOR_RESET "\n");
+  // printf(ANSI_COLOR_YELLOW  "This text is YELLOW!"  ANSI_COLOR_RESET "\n");
+  // printf(ANSI_COLOR_BLUE    "This text is BLUE!"    ANSI_COLOR_RESET "\n");
+  // printf(ANSI_COLOR_MAGENTA "This text is MAGENTA!" ANSI_COLOR_RESET "\n");
+  // printf(ANSI_COLOR_CYAN    "This text is CYAN!"    ANSI_COLOR_RESET "\n\n\n");
 
-  char test[] = "This text is ::red::red ::red::and ::magenta::this is ::cyan::blue";
+  char test[] = "This ::red::text ::basic::is ::red::red ::yellow::and ::magenta::this is ::cyan::blue";
 
   printf("%s\n", multiparse(test));
-  printf("%s\n", SMILEY);
-  printf("%s\n", SHRUG);
+  // printf("%s\n", SMILEY);
+  // printf("%s\n", SHRUG);
 
   return 0;
 }
