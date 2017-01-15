@@ -13,7 +13,7 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
-#define SMILEY     "ʘ‿ʘ"
+#define SMILE       "ʘ‿ʘ"
 #define SHRUG		"¯\\_(ツ)_/¯"
 #define SCARED		"⊙﹏⊙"
 #define DISAPPROVE	"ಠ_ಠ"
@@ -33,8 +33,252 @@
 #define SLEEP 		"(ᴗ˳ᴗ)"
 
 
+char * emojiParse(char *input){
+	if (strstr(input, "~~smile~~") != NULL){
+		char *mark = "~~smile~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, SMILE);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~shrug~~") != NULL){
+		char *mark = "~~shrug~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, SHRUG);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~scared~~") != NULL){
+		char *mark = "~~scared~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, SCARED);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~disapprove~~") != NULL){
+		char *mark = "~~disapprove~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, DISAPPROVE);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~cute~~") != NULL){
+		char *mark = "~~cute~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, CUTE);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~excited~~") != NULL){
+		char *mark = "~~excited~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, EXCITED);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~devious~~") != NULL){
+		char *mark = "~~devious~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, DEVIOUS);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~tableflip~~") != NULL){
+		char *mark = "~~tableflip~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, TABLEFLIP);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~cat~~") != NULL){
+		char *mark = "~~cat~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, CAT);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~fight~~") != NULL){
+		char *mark = "~~fight~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, FIGHT);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~bear~~") != NULL){
+		char *mark = "~~bear~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, BEAR);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~blob~~") != NULL){
+		char *mark = "~~blob~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, BLOB);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~cry~~") != NULL){
+		char *mark = "~~cry~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, CRY);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~love~~") != NULL){
+		char *mark = "~~love~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, LOVE);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~confused~~") != NULL){
+		char *mark = "~~confused~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, CONFUSED);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~fightme~~") != NULL){
+		char *mark = "~~fightme~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, FIGHTME);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~hiding~~") != NULL){
+		char *mark = "~~hiding~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, HIDING);
+		strcat(output, end);
+		return output;
+	}
+	if (strstr(input, "~~sleeping~~") != NULL){
+		char *mark = "~~sleeping~~";
+		char output[1024];
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, SLEEP);
+		strcat(output, end);
+		return output;
+	}
 
-char * parse(char *input){
+	return input;
+}
+
+
+
+char * colorParse(char *input){
+	// char *mark = strstr(input, "::");
+	// if (mark == NULL){
+	// 	return input;
+	// }
+	// else {
+	// 	mark = mark + 2;
+	// 	if (strstr(mark, "::") == NULL){
+	// 		return NULL;
+	// 	}
+	// 	char tag[100];
+	// 	tag[0] = ':';
+	// 	tag[1] = ':';
+	// 	int counter = 2;
+	// 	//while (strcmp(strcat(mark[0], mark[1]), "::")){
+	// 	while (strcmp(mark[0], ':') != 0){
+	// 		tag[counter] = mark[0];
+	// 		mark = mark + 1;
+	// 		counter = counter + 1;
+	// 	}
+	// 	printf("%s\n", tag);
+	// 	printf("%s\n", mark);
+	// }
 	if (strstr(input, "::red::") != NULL){
 		char output[1024];
 		char *start = strstr(input, "::red::");
@@ -89,7 +333,6 @@ char * parse(char *input){
 		strcat(output, ANSI_COLOR_MAGENTA);
 		strcat(output, end);
 		return output;
-
 	}
 	else if (strstr(input, "::cyan::") != NULL){
 		char output[1024];
@@ -101,7 +344,6 @@ char * parse(char *input){
 		strcat(output, ANSI_COLOR_CYAN);
 		strcat(output, end);
 		return output;
-
 	}
 	else if (strstr(input, "::basic::") != NULL){
 		char output[1024];
@@ -117,11 +359,15 @@ char * parse(char *input){
 	return input;
 }
 
-char * multiparse(char *input){
+char * multiParse(char *input){
 	while (strstr(input, "::") != 0){ //this is a dangerous base case
-		char *new = parse(input);
+		char *new = colorParse(input);
 		strcpy(input, new);
 	}
+	while (strstr(input, "~~") != 0){ //this is also sorta dangerous
+		char *new = emojiParse(input);
+		strcpy(input, new);
+		} 
 	strcat(input, ANSI_COLOR_RESET);
 	return input;
 }
@@ -135,11 +381,12 @@ int main(int argc, char const *argv[]) {
   // printf(ANSI_COLOR_MAGENTA "This text is MAGENTA!" ANSI_COLOR_RESET "\n");
   // printf(ANSI_COLOR_CYAN    "This text is CYAN!"    ANSI_COLOR_RESET "\n\n\n");
 
-  char test[] = "This ::red::text ::basic::is ::red::red ::yellow::and ::magenta::this is ::cyan::blue";
+  char test[] = "I am this guy: ~~smile~~ yes I am a ~~bear~~!";
 
-  printf("%s\n", multiparse(test));
+  printf("%s\n", multiParse(test));
   // printf("%s\n", SMILEY);
   // printf("%s\n", SHRUG);
 
   return 0;
 }
+

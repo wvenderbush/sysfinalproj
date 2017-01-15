@@ -3,9 +3,9 @@
 #include <string.h>
 #include <unistd.h>
 
-char * parse(char *input);
+char * colorParse(char *input);
 
-char * multiparse(char *input);
+char * multiParse(char *input);
 
-char * emoji(char *input);
+char * emojiParse(char *input);
 
