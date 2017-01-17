@@ -5,10 +5,16 @@
 
 #include "networking.h"
 
+#define HEADER "   ______   ________          __\n  / ____/  / ____/ /_  ____ _/ /_\n / /      / /   / __ \\/ __ `/ __/\n/ /___   / /___/ / / / /_/ / /_\n\\____/   \\____/_/ /_/\\__,_/\\__/\n\n"
+#define UNDERLINE "----------------------------------\n\n"
+
 int main( int argc, char *argv[] ) {
 
   char host[100];
-  printf("enter a host to connect to (format xxx.xxx.xxx.xxx) >");
+  printf("\e[1;1H\e[2J");
+  printf(HEADER);
+  printf(UNDERLINE);
+  printf("Enter a host to connect (format xxx.xxx.xxx.xxx)\n>");
   fgets(host, sizeof(host), stdin);
   *strchr(host, '\n') = 0;
   
