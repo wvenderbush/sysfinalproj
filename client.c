@@ -29,7 +29,8 @@ int main( int argc, char *argv[] ) {
 	write( sd, buffer, sizeof(buffer) );
 	
       }
-  }else{
+  }
+  else{
     printf("%d", f);
     while(1){
       char buffer2[MESSAGE_BUFFER_SIZE];

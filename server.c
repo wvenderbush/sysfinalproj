@@ -2,18 +2,29 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdio.h> 
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <fcntl.h>                                                             
 
 #include "networking.h"
 
 void process( char * s );
 void sub_server( int sd, int start );
 
-int writeables[100];
-int readables[100];
-int start = 0;
+
 
 int main() {
 
+  int shmidW = shmget(ftok(".",12), sizeof(int[100]), IPC_CREAT | 0644 );
+  int shmidR = shmget(ftok(".",13), sizeof(int[100]), IPC_CREAT | 0644 );
+  
+  int *writeables = (int *)shmat( shmidW, 0, 0 );
+  int *readables = (int *)shmat( shmidW, 0, 0 );
+
+  int start = 0;
+  
   int sd, connection;
 
   sd = server_setup();
@@ -32,18 +43,31 @@ int main() {
       close(sd);
       sub_server(connection, start -1);
 
-      exit(0);
+      //exit(0);
     }
     else {
       close( connection );
       
     }
   }
+
+  int err = shmdt( writeables );
+  err = shmdt( readables );
+  
+  shmctl(shmidW,IPC_RMID,0);
+  shmctl(shmidR,IPC_RMID,0);
   return 0;
 }
 
 
 void sub_server( int sd, int start ) {
+  int shmidW = shmget(ftok(".",12), sizeof(int[100]), IPC_CREAT | 0644 | IPC_EXCL);
+  int shmidR = shmget(ftok(".",13), sizeof(int[100]), IPC_CREAT | 0644 | IPC_EXCL);
+  
+  int *writeables = (int *)shmat( shmidW, 0, 0 );
+  int *readables = (int *)shmat( shmidW, 0, 0 );
+
+
   int f = fork();
   if (f == 0){
     char buffer[MESSAGE_BUFFER_SIZE];
@@ -58,9 +82,15 @@ void sub_server( int sd, int start ) {
     }
   }else{
     char buffer2[MESSAGE_BUFFER_SIZE];
-    while(read(readables[start], buffer2, sizeof(buffer2))){
-      printf("recvieed from others: %s\n", buffer2);
+    while( read(readables[start], buffer2, sizeof(buffer2) ) ){
+      printf("[client %d] recieved from others: %s\n", start, buffer2);
       write(sd, buffer2, sizeof(buffer2));
     }
   }
+
+  int err = shmdt( writeables );
+  err = shmdt( readables );
+  
+  shmctl(shmidW,IPC_RMID,0);
+  shmctl(shmidR,IPC_RMID,0);
 }
