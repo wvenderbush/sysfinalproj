@@ -381,7 +381,7 @@ int main(int argc, char const *argv[]) {
   // printf(ANSI_COLOR_MAGENTA "This text is MAGENTA!" ANSI_COLOR_RESET "\n");
   // printf(ANSI_COLOR_CYAN    "This text is CYAN!"    ANSI_COLOR_RESET "\n\n\n");
 
-  char test[] = "I am this guy: ~~smile~~ yes I am a ~~bear~~!";
+  char test[] = "I am this guy: ::red::~~smile~~ ::basic::yes I am a ::yellow::~~fightme~~::basic::!";
 
   printf("%s\n", multiParse(test));
   // printf("%s\n", SMILEY);
