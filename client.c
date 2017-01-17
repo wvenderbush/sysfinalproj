@@ -23,7 +23,7 @@ int main( int argc, char *argv[] ) {
   if (f == 0) {
     printf("%d", f);
       while (1) {
-	printf("enter message: V \n");
+	printf("enter message: ");
 	fgets( buffer, sizeof(buffer), stdin );
 	char *p = strchr(buffer, '\n');
 	write( sd, buffer, sizeof(buffer) );
