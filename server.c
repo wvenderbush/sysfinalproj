@@ -26,8 +26,7 @@ int main() {
   int *totalConnections = (int *)shmat( shmidNum, 0, 0 );
 
   *totalConnections = 0;
-  
-  
+    
   int sd, connection;
 
   sd = server_setup();
