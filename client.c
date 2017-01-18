@@ -10,6 +10,8 @@
 
 int main( int argc, char *argv[] ) {
 
+  int err;
+  
   char host[100];
   printf("\e[1;1H\e[2J");
   printf(HEADER);
@@ -27,21 +29,22 @@ int main( int argc, char *argv[] ) {
   char buffer[MESSAGE_BUFFER_SIZE];
   int f = fork();
   if (f == 0) {
-    printf("%d", f);
+    //printf("%d", f);
       while (1) {
 	printf("enter message: ");
 	fgets( buffer, sizeof(buffer), stdin );
 	char *p = strchr(buffer, '\n');
-	write( sd, buffer, sizeof(buffer) );
-	
+	err = write( sd, buffer, sizeof(buffer) );
+	error_check( err, "writing to server");
       }
   }
   else{
-    printf("%d", f);
+    //printf("%d", f);
     while(1){
       char buffer2[MESSAGE_BUFFER_SIZE];
-      read ( sd, buffer2, sizeof(buffer2) );
-      printf("ip sent this: %s\n", buffer2);
+      err = read ( sd, buffer2, sizeof(buffer2) );
+      error_check( err, "reading from server");
+      printf("recieved: %s\n", buffer2);
     }
   }
 
