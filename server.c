@@ -93,7 +93,7 @@ void sub_server( int sd, int connectionNum ) {
       printf("+++[subserver %d] thinks there are %d total connections---\n", connectionNum, *total);
       for( i = 0; i < *total; i++){
 	if (i - connectionNum) { // if i != connectionNum
-	  write( writer[i], buffer, sizeof(buffer) );    
+	  write( writer[i], buffer, strlen(buffer) );    
 	  printf("+++[subserver %d] sent <%s> to [subserver %d]---\n", connectionNum, buffer, i);
 	}
       }
@@ -105,7 +105,7 @@ void sub_server( int sd, int connectionNum ) {
     while(1){
       read( reader[connectionNum], buffer2, sizeof(buffer2) );
       printf("+++[subserver %d] recieved <%s>, sent to [client %d]---\n", connectionNum, buffer2, connectionNum);
-      write(sd, buffer2, sizeof(buffer2));
+      write(sd, buffer2, strlen(buffer2));
     }
   }
  
