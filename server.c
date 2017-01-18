@@ -22,7 +22,7 @@ int main() {
   int shmidNum = shmget(ftok(".",14), sizeof(int), IPC_CREAT | 0644 );
   
   int *writeables = (int *)shmat( shmidW, 0, 0 );
-  int *readables = (int *)shmat( shmidW, 0, 0 );
+  int *readables = (int *)shmat( shmidR, 0, 0 );
   int *totalConnections = (int *)shmat( shmidNum, 0, 0 );
 
   *totalConnections = 0;
@@ -93,7 +93,7 @@ void sub_server( int sd, int connectionNum ) {
       printf("+++[subserver %d] thinks there are %d total connections---\n", connectionNum, *total);
       for( i = 0; i < *total; i++){
 	if (i - connectionNum) { // if i != connectionNum
-	  write( writer[i], buffer, strlen(buffer) );    
+	  write( writer[i], buffer, strlen(buffer) + 1);    
 	  printf("+++[subserver %d] sent <%s> to [subserver %d]---\n", connectionNum, buffer, i);
 	}
       }
@@ -106,7 +106,7 @@ void sub_server( int sd, int connectionNum ) {
       printf("+++[subserver %d] listining...---\n", connectionNum);
       read( reader[connectionNum], buffer2, sizeof(buffer2) );
       printf("+++[subserver %d] recieved <%s>, sent to [client %d]---\n", connectionNum, buffer2, connectionNum);
-      write(sd, buffer2, strlen(buffer2));
+      write(sd, buffer2, strlen(buffer2) + 1);
     }
   }
  
