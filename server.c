@@ -19,7 +19,7 @@ int main() {
 
   int shmidW = shmget(ftok(".",12), sizeof(int[100]), IPC_CREAT | 0644 );
   int shmidR = shmget(ftok(".",13), sizeof(int[100]), IPC_CREAT | 0644 );
-  int shmidNum = shmget(ftok(".",14), sizeof(int[100]), IPC_CREAT | 0644 );
+  int shmidNum = shmget(ftok(".",14), sizeof(int), IPC_CREAT | 0644 );
   
   int *writeables = (int *)shmat( shmidW, 0, 0 );
   int *readables = (int *)shmat( shmidW, 0, 0 );
@@ -76,7 +76,7 @@ int main() {
 void sub_server( int sd, int connectionNum ) {
   int shmidW = shmget(ftok(".",12), sizeof(int[100]), 0 );
   int shmidR = shmget(ftok(".",13), sizeof(int[100]), 0 );
-  int shmidNum = shmget(ftok(".",14), sizeof(int[100]), 0);
+  int shmidNum = shmget(ftok(".",14), sizeof(int), 0);
   
   int *writer = (int *)shmat( shmidW, 0, SHM_RDONLY );
   int *reader = (int *)shmat( shmidR, 0, SHM_RDONLY );
@@ -103,6 +103,7 @@ void sub_server( int sd, int connectionNum ) {
   else{
     char buffer2[MESSAGE_BUFFER_SIZE];
     while(1){
+      printf("+++[subserver %d] listining...---\n", connectionNum);
       read( reader[connectionNum], buffer2, sizeof(buffer2) );
       printf("+++[subserver %d] recieved <%s>, sent to [client %d]---\n", connectionNum, buffer2, connectionNum);
       write(sd, buffer2, strlen(buffer2));
