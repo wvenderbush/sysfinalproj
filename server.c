@@ -108,13 +108,5 @@ void sub_server( int sd, int connectionNum ) {
       write(sd, buffer2, sizeof(buffer2));
     }
   }
-
-  int err = shmdt( writer );
-  err = shmdt( reader );
-  err = shmdt( total );
-  
-  shmctl(shmidW,IPC_RMID,0);
-  shmctl(shmidR,IPC_RMID,0);
-  shmctl(shmidNum,IPC_RMID,0);
-  
+ 
 }
