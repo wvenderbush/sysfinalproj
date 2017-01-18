@@ -7,7 +7,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <fcntl.h>                                                             
-
+#include <sys/stat.h>
 #include "networking.h"
 
 void process( char * s );
@@ -29,7 +29,8 @@ int main() {
   while (1) {
     connection = server_connect( sd );
     printf("+++connection from [client %d]---\n", *totalConnections);
-    char* path = sprintf(".%d", totalConnections);
+    char* path;
+    sprintf(path,".%d", *totalConnections);
     int fifo = mkfifo(path, 0644);
     (*totalConnections)++;
     int f = fork();
@@ -47,12 +48,8 @@ int main() {
     }
   }
 
-  int err = shmdt( writeables );
-  err = shmdt( readables );
-  err = shmdt( totalConnections );
-  
-  shmctl(shmidW,IPC_RMID,0);
-  shmctl(shmidR,IPC_RMID,0);
+  int err = shmdt( totalConnections );
+
   shmctl(shmidNum,IPC_RMID,0);
   return 0;
 }
@@ -65,7 +62,25 @@ void sub_server( int sd, int connectionNum ) {
   int f = fork();
   if (f == 0){
     char buffer[MESSAGE_BUFFER_SIZE];
+    int* fds = (int *)calloc(8,*total);
+    int localtotal = *total;
+    int j;
+    for(j =0; j < *total; j++){
+      if(j - connectionNum){
+	char* pipe;
+	sprintf(pipe,".%d", j);
+	fds[j] = open(pipe,O_WRONLY);
+      }
+    }
     while (1) {
+      if(*total - localtotal){
+      for(j =0; j < *total; j++){
+	char* pipe;
+	sprintf(pipe,".%d", j);
+	fds[j] = open(pipe,O_WRONLY);
+      }
+      localtotal = *total;
+    }
       
       read( sd, buffer, sizeof(buffer) );
       printf("+++[client %d] sent <%s>---\n", connectionNum, buffer);
@@ -73,7 +88,7 @@ void sub_server( int sd, int connectionNum ) {
       printf("+++[subserver %d] thinks there are %d total connections---\n", connectionNum, *total);
       for( i = 0; i < *total; i++){
 	if (i - connectionNum) { // if i != connectionNum
-	  write( writer[i], buffer, strlen(buffer) + 1);    
+	  write( fds[i], buffer, strlen(buffer) + 1);    
 	  printf("+++[subserver %d] sent <%s> to [subserver %d]---\n", connectionNum, buffer, i);
 	}
       }
@@ -82,9 +97,12 @@ void sub_server( int sd, int connectionNum ) {
   
   else{
     char buffer2[MESSAGE_BUFFER_SIZE];
+    char* name;
+    sprintf(name,".%d",connectionNum);
+    int reader = open(name,O_RDONLY);
     while(1){
       printf("+++[subserver %d] listining...---\n", connectionNum);
-      read( reader[connectionNum], buffer2, sizeof(buffer2) );
+      read( reader, buffer2, sizeof(buffer2) );
       printf("+++[subserver %d] recieved <%s>, sent to [client %d]---\n", connectionNum, buffer2, connectionNum);
       write(sd, buffer2, strlen(buffer2) + 1);
     }
