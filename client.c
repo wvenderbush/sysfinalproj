@@ -29,17 +29,14 @@ int main( int argc, char *argv[] ) {
   char buffer[MESSAGE_BUFFER_SIZE];
   int f = fork();
   if (f == 0) {
-    //printf("%d", f);
-      while (1) {
+    while (1) {
 	printf("enter message: ");
 	fgets( buffer, sizeof(buffer), stdin );
-	char *p = strchr(buffer, '\n');
 	err = write( sd, buffer, sizeof(buffer) );
 	error_check( err, "writing to server");
-      }
+    }
   }
   else{
-    //printf("%d", f);
     while(1){
       char buffer2[MESSAGE_BUFFER_SIZE];
       err = read ( sd, buffer2, sizeof(buffer2) );

@@ -19,11 +19,14 @@ int main() {
 
   int shmidW = shmget(ftok(".",12), sizeof(int[100]), IPC_CREAT | 0644 );
   int shmidR = shmget(ftok(".",13), sizeof(int[100]), IPC_CREAT | 0644 );
+  int shmidNum = shmget(ftok(".",14), sizeof(int[100]), IPC_CREAT | 0644 );
   
   int *writeables = (int *)shmat( shmidW, 0, 0 );
   int *readables = (int *)shmat( shmidW, 0, 0 );
+  int *totalConnections = (int *)shmat( shmidNum, 0, 0 );
 
-  int start = 0;
+  *totalConnections = 0;
+  
   
   int sd, connection;
 
@@ -31,24 +34,26 @@ int main() {
   
   while (1) {
     connection = server_connect( sd );
-    printf("connection from [client %d]\n", start);
+    printf("+++connection from [client %d]---\n", *totalConnections);
 
     int descriptors[2];
     pipe(descriptors);
-    writeables[start]  = descriptors[1];
-    readables[start] = descriptors[0];
-    start++;
+    writeables[*totalConnections]  = descriptors[1];
+    readables[*totalConnections] = descriptors[0];
+    (*totalConnections)++;
     int f = fork();
     if ( f == 0 ) {
 
       close(sd);
-      sub_server(connection, start - 1);
+      sub_server(connection, *totalConnections - 1);
 
       int err = shmdt( writeables );
       err = shmdt( readables );
+      err = shmdt( totalConnections );
       
       shmctl(shmidW,IPC_RMID,0);
       shmctl(shmidR,IPC_RMID,0);
+      shmctl(shmidNum,IPC_RMID,0);
       exit(0);
     }
     else {
@@ -59,19 +64,23 @@ int main() {
 
   int err = shmdt( writeables );
   err = shmdt( readables );
+  err = shmdt( totalConnections );
   
   shmctl(shmidW,IPC_RMID,0);
   shmctl(shmidR,IPC_RMID,0);
+  shmctl(shmidNum,IPC_RMID,0);
   return 0;
 }
 
 
-void sub_server( int sd, int start ) {
-  int shmidW = shmget(ftok(".",12), sizeof(int[100]), IPC_CREAT | 0644 | IPC_EXCL);
-  int shmidR = shmget(ftok(".",13), sizeof(int[100]), IPC_CREAT | 0644 | IPC_EXCL);
+void sub_server( int sd, int connectionNum ) {
+  int shmidW = shmget(ftok(".",12), sizeof(int[100]), 0 );
+  int shmidR = shmget(ftok(".",13), sizeof(int[100]), 0 );
+  int shmidNum = shmget(ftok(".",14), sizeof(int[100]), 0);
   
-  int *writer = (int *)shmat( shmidW, 0, 0 );
-  int *reader = (int *)shmat( shmidR, 0, 0 );
+  int *writer = (int *)shmat( shmidW, 0, SHM_RDONLY );
+  int *reader = (int *)shmat( shmidR, 0, SHM_RDONLY );
+  int *total = (int *)shmat( shmidNum, 0, SHM_RDONLY );
 
 
   int f = fork();
@@ -79,12 +88,13 @@ void sub_server( int sd, int start ) {
     char buffer[MESSAGE_BUFFER_SIZE];
     while (1) {
       read( sd, buffer, sizeof(buffer) );
-      printf("[client %d] sent <%s>\n", start, buffer);
+      printf("+++[client %d] sent <%s>---\n", connectionNum, buffer);
       int i;
-      for(i = 0; i < start; i++){
-	if (i - start){
+      printf("+++[subserver %d] thinks there are %d total connections---\n", connectionNum, *total);
+      for( i = 0; i < *total; i++){
+	if (i - connectionNum) { // if i != connectionNum
 	  write( writer[i], buffer, sizeof(buffer) );    
-	  printf("[subserver %d] sent <%s> to [subserver %d]\n", start, buffer, i);
+	  printf("+++[subserver %d] sent <%s> to [subserver %d]---\n", connectionNum, buffer, i);
 	}
       }
     }
@@ -93,15 +103,18 @@ void sub_server( int sd, int start ) {
   else{
     char buffer2[MESSAGE_BUFFER_SIZE];
     while(1){
-      read( reader[start], buffer2, sizeof(buffer2) );
-      printf("[subserver %d] recieved <%s>, sent to [client %d]\n", start, buffer2, start);
+      read( reader[connectionNum], buffer2, sizeof(buffer2) );
+      printf("+++[subserver %d] recieved <%s>, sent to [client %d]---\n", connectionNum, buffer2, connectionNum);
       write(sd, buffer2, sizeof(buffer2));
     }
   }
 
   int err = shmdt( writer );
   err = shmdt( reader );
+  err = shmdt( total );
   
   shmctl(shmidW,IPC_RMID,0);
   shmctl(shmidR,IPC_RMID,0);
+  shmctl(shmidNum,IPC_RMID,0);
+  
 }
