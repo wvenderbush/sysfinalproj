@@ -19,7 +19,7 @@ int main() {
   int shmidNum = shmget(ftok(".",14), sizeof(int), IPC_CREAT | 0644 );
   int *totalConnections = (int *)shmat( shmidNum, 0, 0 );
 
-  *totalConnections = 0;
+  *totalConnections = -1;
     
   int sd, connection;
 
@@ -27,16 +27,19 @@ int main() {
   
   while (1) {
     connection = server_connect( sd );
-    printf("+++connection from [client %d]---\n", *totalConnections);
-    char* path;
-    sprintf(path,".%d", *totalConnections);
-    int fifo = mkfifo(path, 0644);
     (*totalConnections)++;
+
+    printf("+++connection from [client %d]---\n", *totalConnections);
+    char * path;
+    sprintf(path,".%d", *totalConnections);
+    int err = mkfifo(path, 0644);
+    error_check( err, "making fifo");
+    
     int f = fork();
     if ( f == 0 ) {
 
       close(sd);
-      sub_server(connection, *totalConnections - 1);
+      sub_server(connection, *totalConnections);
       int err = shmdt( totalConnections );
       shmctl(shmidNum,IPC_RMID,0);
       exit(0);
@@ -60,11 +63,12 @@ void sub_server( int sd, int connectionNum ) {
 
   int f = fork();
   if (f == 0){
+    
     char buffer[MESSAGE_BUFFER_SIZE];
     int* fds = (int *)calloc(8,*total);
     int localtotal = *total;
     int j;
-    for(j =0; j < *total; j++){
+    for(j = 0; j < *total; j++){
       if(j - connectionNum){
 	char* pipe;
 	sprintf(pipe,".%d", j);
