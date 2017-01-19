@@ -40,10 +40,12 @@ int main( int argc, char *argv[] ) {
   printf(": ");
 	fgets( buffer, sizeof(buffer), stdin );
   strcpy(newbuff, multiParse(buffer));
-  //strcat(": ", newbuff);
-  //strcat(user, newbuff);
-  printf("%s: %s\n", user, newbuff);
-	err = write( sd, newbuff, sizeof(newbuff) );
+  printf("\033[1A\x1b[K%s: %s\n", user, newbuff);
+  char message[MESSAGE_BUFFER_SIZE];
+  strcat(message, user);
+  strcat(message, ": ");
+  strcat(message, newbuff);
+	err = write( sd, message, sizeof(message) );
 	error_check( err, "writing to server");
     }
   }
@@ -52,7 +54,7 @@ int main( int argc, char *argv[] ) {
       char buffer2[MESSAGE_BUFFER_SIZE];
       err = read ( sd, buffer2, sizeof(buffer2) );
       error_check( err, "reading from server");
-      printf("Received: %s\n", buffer2);
+      printf("\r %s\n", buffer2);
     }
   }
 
