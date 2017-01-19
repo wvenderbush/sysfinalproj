@@ -19,6 +19,13 @@ int main() {
   int shmidNum = shmget(ftok(".",14), sizeof(int), IPC_CREAT | 0644 );
   int *totalConnections = (int *)shmat( shmidNum, 0, 0 );
 
+  int shmidTab = shmget(ftok(".",12), sizeof(char[MAX_CONNECTIONS]), IPC_CREAT | 0644 );
+  char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
+
+  int k = 0;
+  for ( ; k < MAX_CONNECTIONS; k++)
+    pipeTable[k] = PIPE_NC
+  
   *totalConnections = -1;
     
   int sd, connection;
@@ -28,23 +35,35 @@ int main() {
   while (1) {
     connection = server_connect( sd );
     (*totalConnections)++;
-
     printf("+++connection from [client %d]---\n", *totalConnections);
-    char path[5];
-    sprintf(path,".%d", *totalConnections);
-
-    printf("path to fifo for [subserver %d]: %s\n", *totalConnections, path);
     
-    int err = mkfifo(path, 0644);
-    error_check( err, "making fifo");
+    int connectionNum;
+    for( connectionNum = 0; ! pipeTable[connectionNum]; connectionNum++ );
+    
+    if (pipeTable[connectionNum] == 1) {
+      char path[5];
+      sprintf(path,".%d", connectionNum);
+      printf("creating [fifo %d]", connectionNum);
+
+      int err = mkfifo(path, 0644);
+      error_check( err, "making fifo");
+
+      pipeTable[ connectionNum ] = 0;
+    }
+    else
+      pipeTable[ connectionNum ] = 0;
     
     int f = fork();
     if ( f == 0 ) {
 
       close(sd);
-      sub_server(connection, *totalConnections);
+      sub_server(connection, connectionNum);
+
       int err = shmdt( totalConnections );
       shmctl(shmidNum,IPC_RMID,0);
+
+      err = shmdt( pipeTable );
+      shmctl(shmidTab,IPC_RMID,0);
       exit(0);
     }
     else {
@@ -64,6 +83,9 @@ void sub_server( int sd, int connectionNum ) {
   int shmidNum = shmget(ftok(".",14), sizeof(int), 0);
   int *total = (int *)shmat( shmidNum, 0, SHM_RDONLY );
 
+  int shmidTab = shmget(ftok(".",12), sizeof(char[MAX_CONNECTIONS]), IPC_CREAT | 0644 );
+  char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
+
   int f = fork();
   if (f == 0){
     
@@ -71,25 +93,17 @@ void sub_server( int sd, int connectionNum ) {
     int pipes[100];
     
     int localtotal = *total;
-    int j;
-    for(j = 0; j <= *total; j++){
-      if(j - connectionNum){
-	char path[5];
-	sprintf(path,".%d", j);
-	pipes[j] = open(path,O_WRONLY);
-      }
-    }
+    
     
     while (1) {
-      if(*total - localtotal){
-	for(j = localtotal + 1; j <= *total; j++){
+
+      int j;
+      for(j = 0; j <= *total; j++){
+	if(j - connectionNum && !pipeTable[j] ){
 	  char path[5];
 	  sprintf(path,".%d", j);
 	  pipes[j] = open(path,O_WRONLY);
-
-	  localtotal = *total;
 	}
-	
       }
       
       read( sd, buffer, sizeof(buffer) );
