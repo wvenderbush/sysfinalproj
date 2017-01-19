@@ -68,7 +68,7 @@ void sub_server( int sd, int connectionNum ) {
     int* fds = (int *)calloc(8,*total);
     int localtotal = *total;
     int j;
-    for(j = 0; j < *total; j++){
+    for(j = localtotal; j < *total; j++){
       if(j - connectionNum){
 	char* pipe;
 	sprintf(pipe,".%d", j);
