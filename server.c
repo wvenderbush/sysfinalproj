@@ -30,8 +30,11 @@ int main() {
     (*totalConnections)++;
 
     printf("+++connection from [client %d]---\n", *totalConnections);
-    char * path;
+    char path[5];
     sprintf(path,".%d", *totalConnections);
+
+    printf("path to fifo for [subserver %d]: %s\n", *totalConnections, path);
+    
     int err = mkfifo(path, 0644);
     error_check( err, "making fifo");
     
@@ -65,33 +68,37 @@ void sub_server( int sd, int connectionNum ) {
   if (f == 0){
     
     char buffer[MESSAGE_BUFFER_SIZE];
-    int* fds = (int *)calloc(8,*total);
+    int pipes[100];
+    
     int localtotal = *total;
     int j;
-    for(j = localtotal; j < *total; j++){
+    for(j = 0; j <= *total; j++){
       if(j - connectionNum){
-	char* pipe;
-	sprintf(pipe,".%d", j);
-	fds[j] = open(pipe,O_WRONLY);
+	char path[5];
+	sprintf(path,".%d", j);
+	pipes[j] = open(path,O_WRONLY);
       }
     }
+    
     while (1) {
       if(*total - localtotal){
-      for(j =0; j < *total; j++){
-	char* pipe;
-	sprintf(pipe,".%d", j);
-	fds[j] = open(pipe,O_WRONLY);
+	for(j = localtotal + 1; j <= *total; j++){
+	  char path[5];
+	  sprintf(path,".%d", j);
+	  pipes[j] = open(path,O_WRONLY);
+
+	  localtotal = *total;
+	}
+	
       }
-      localtotal = *total;
-    }
       
       read( sd, buffer, sizeof(buffer) );
       printf("+++[client %d] sent <%s>---\n", connectionNum, buffer);
       int i;
-      printf("+++[subserver %d] thinks there are %d total connections---\n", connectionNum, *total);
-      for( i = 0; i < *total; i++){
+      printf("+++[subserver %d] thinks there are %d + 1 total connections---\n", connectionNum, *total);
+      for( i = 0; i <= *total; i++){
 	if (i - connectionNum) { // if i != connectionNum
-	  write( fds[i], buffer, strlen(buffer) + 1);    
+	  write( pipes[i], buffer, strlen(buffer) + 1);    
 	  printf("+++[subserver %d] sent <%s> to [subserver %d]---\n", connectionNum, buffer, i);
 	}
       }
@@ -100,9 +107,11 @@ void sub_server( int sd, int connectionNum ) {
   
   else{
     char buffer2[MESSAGE_BUFFER_SIZE];
-    char* name;
-    sprintf(name,".%d",connectionNum);
-    int reader = open(name,O_RDONLY);
+
+    char path[5];
+    sprintf(path,".%d",connectionNum);
+    int reader = open(path,O_RDONLY);
+    
     while(1){
       printf("+++[subserver %d] listining...---\n", connectionNum);
       read( reader, buffer2, sizeof(buffer2) );
