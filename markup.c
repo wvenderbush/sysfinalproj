@@ -34,9 +34,9 @@
 
 
 char * emojiParse(char *input){
+	char *output = (char *) malloc(1024);
 	if (strstr(input, "~~smile~~") != NULL){
 		char *mark = "~~smile~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -48,7 +48,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~shrug~~") != NULL){
 		char *mark = "~~shrug~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -60,7 +59,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~scared~~") != NULL){
 		char *mark = "~~scared~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -72,7 +70,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~disapprove~~") != NULL){
 		char *mark = "~~disapprove~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -84,7 +81,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~cute~~") != NULL){
 		char *mark = "~~cute~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -96,7 +92,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~excited~~") != NULL){
 		char *mark = "~~excited~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -120,7 +115,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~tableflip~~") != NULL){
 		char *mark = "~~tableflip~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -132,7 +126,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~cat~~") != NULL){
 		char *mark = "~~cat~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -144,7 +137,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~fight~~") != NULL){
 		char *mark = "~~fight~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -156,7 +148,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~bear~~") != NULL){
 		char *mark = "~~bear~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -168,7 +159,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~blob~~") != NULL){
 		char *mark = "~~blob~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -180,7 +170,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~cry~~") != NULL){
 		char *mark = "~~cry~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -192,7 +181,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~love~~") != NULL){
 		char *mark = "~~love~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -216,7 +204,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~fightme~~") != NULL){
 		char *mark = "~~fightme~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -228,7 +215,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~hiding~~") != NULL){
 		char *mark = "~~hiding~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -240,7 +226,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~sleeping~~") != NULL){
 		char *mark = "~~sleeping~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -257,30 +242,8 @@ char * emojiParse(char *input){
 
 
 char * colorParse(char *input){
-	// char *mark = strstr(input, "::");
-	// if (mark == NULL){
-	// 	return input;
-	// }
-	// else {
-	// 	mark = mark + 2;
-	// 	if (strstr(mark, "::") == NULL){
-	// 		return NULL;
-	// 	}
-	// 	char tag[100];
-	// 	tag[0] = ':';
-	// 	tag[1] = ':';
-	// 	int counter = 2;
-	// 	//while (strcmp(strcat(mark[0], mark[1]), "::")){
-	// 	while (strcmp(mark[0], ':') != 0){
-	// 		tag[counter] = mark[0];
-	// 		mark = mark + 1;
-	// 		counter = counter + 1;
-	// 	}
-	// 	printf("%s\n", tag);
-	// 	printf("%s\n", mark);
-	// }
+	char *output = (char *) malloc(1024);
 	if (strstr(input, "::red::") != NULL){
-		char output[1024];
 		char *start = strstr(input, "::red::");
 		char *end = start;
 		end = end + strlen("::red::");
@@ -291,7 +254,6 @@ char * colorParse(char *input){
 		return output;
 	}
 	else if (strstr(input, "::green::") != NULL){
-		char output[1024];
 		char *start = strstr(input, "::green::");
 		char *end = start;
 		end = end + strlen("::green::");
@@ -302,7 +264,6 @@ char * colorParse(char *input){
 		return output;
 	}
 	else if (strstr(input, "::yellow::") != NULL){
-		char output[1024];
 		char *start = strstr(input, "::yellow::");
 		char *end = start;
 		end = end + strlen("::yellow::");
@@ -313,7 +274,6 @@ char * colorParse(char *input){
 		return output;
 	}
 	else if (strstr(input, "::blue::") != NULL){
-		char output[1024];
 		char *start = strstr(input, "::blue::");
 		char *end = start;
 		end = end + strlen("::blue::");
@@ -324,7 +284,6 @@ char * colorParse(char *input){
 		return output;
 	}
 	else if (strstr(input, "::magenta::") != NULL){
-		char output[1024];
 		char *start = strstr(input, "::magenta::");
 		char *end = start;
 		end = end + strlen("::magenta::");
@@ -335,7 +294,6 @@ char * colorParse(char *input){
 		return output;
 	}
 	else if (strstr(input, "::cyan::") != NULL){
-		char output[1024];
 		char *start = strstr(input, "::cyan::");
 		char *end = start;
 		end = end + strlen("::cyan::");
@@ -346,7 +304,6 @@ char * colorParse(char *input){
 		return output;
 	}
 	else if (strstr(input, "::basic::") != NULL){
-		char output[1024];
 		char *start = strstr(input, "::basic::");
 		char *end = start;
 		end = end + strlen("::basic::");
@@ -363,10 +320,12 @@ char * multiParse(char *input){
 	while (strstr(input, "::") != 0){ //this is a dangerous base case
 		char *new = colorParse(input);
 		strcpy(input, new);
+		free(new);
 	}
 	while (strstr(input, "~~") != 0){ //this is also sorta dangerous
 		char *new = emojiParse(input);
 		strcpy(input, new);
+		free(new);
 		} 
 	strcat(input, ANSI_COLOR_RESET);
 	return input;

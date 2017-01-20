@@ -86,24 +86,30 @@ int main() {
 void sub_server( int sd, int connectionNum ) {
   int shmidNum = shmget(ftok(".",14), sizeof(int), 0);
   int *total = (int *)shmat( shmidNum, 0, SHM_RDONLY );
-
+  error_check(shmidNum, "scrapyard codexs");
   int shmidTab = shmget(ftok(".",12), sizeof(char[MAX_CONNECTIONS]), IPC_CREAT | 0644 );
   char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
 
   int f = fork();
+  
   if (f == 0){
     
     char buffer[MESSAGE_BUFFER_SIZE];
     int pipes[100];
+    printf("before\n");
     set_array( 0, pipes, sizeof( int ), sizeof(pipes) );
+    printf("after\n");
     
     int localtotal = *total;
+
+    printf("after part 2\n");
+
     
     while (1) {
 
       //opening the pipes for writing
       open_pipes( pipeTable, total, pipes, connectionNum );
-      
+    
       read( sd, buffer, sizeof(buffer) );
       printf("+++[client %d] sent <%s>---\n", connectionNum, buffer);
       int i;
