@@ -38,17 +38,20 @@ int main( int argc, char *argv[] ) {
   int f = fork();
   if (f == 0) {
     while (1) {
-	printf("%s", user);
-  printf(": ");
-	fgets( buffer, sizeof(buffer), stdin );
-  strcpy(newbuff, multiParse(buffer));
-  printf("\033[1A\x1b[K%s: %s\n", user, newbuff);
-  char message[MESSAGE_BUFFER_SIZE];
-  strcat(message, user);
-  strcat(message, ": ");
-  strcat(message, newbuff);
-	err = write( sd, message, sizeof(message) );
-	error_check( err, "writing to server");
+      printf("%s: ", user);
+      fgets( buffer, sizeof(buffer), stdin );
+      
+      strcpy(newbuff, multiParse(buffer));
+      
+      printf("\033[1A\x1b[K%s: %s\n", user, newbuff); // deleats prompt and displays formatted message
+      char message[MESSAGE_BUFFER_SIZE];
+      message[0] = 0; 
+      strcat(message, user);
+      strcat(message, ": ");
+      strcat(message, newbuff);
+      
+      err = write( sd, message, sizeof(message) );
+      error_check( err, "writing to server");
     }
   }
   else{
