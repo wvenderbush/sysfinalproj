@@ -1,9 +1,9 @@
 all: server client
 
-server: server.o networking.o
+server: server.o networking.o server.h
 	gcc -o server server.o networking.o
 
-client: client.o networking.o
+client: client.o networking.o client.h
 	gcc -o client client.o networking.o
 
 server.o: server.c networking.h

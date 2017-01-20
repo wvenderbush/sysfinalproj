@@ -4,7 +4,9 @@
 #include <unistd.h>
 
 #include "networking.h"
+#include "client.h"
 #include "markup.c"
+
 
 #define HEADER "   ______   ________          __\n  / ____/  / ____/ /_  ____ _/ /_\n / /      / /   / __ \\/ __ `/ __/\n/ /___   / /___/ / / / /_/ / /_\n\\____/   \\____/_/ /_/\\__,_/\\__/\n\n"
 #define UNDERLINE "----------------------------------\n\n"
