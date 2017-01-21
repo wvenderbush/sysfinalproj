@@ -26,7 +26,7 @@ int main() {
 
   printf("+++pipeTable: %p---\n", pipeTable);
   
-  set_array( PIPE_NC, pipeTable, sizeof(char), MAX_CONNECTIONS);
+  set_char_array( PIPE_NC, pipeTable, MAX_CONNECTIONS );
   *totalConnections = -1;
     
   int sd, connection;
@@ -91,10 +91,10 @@ void sub_server( int sd, int connectionNum ) {
   int *total = (int *)shmat( shmidNum, 0, SHM_RDONLY );
   error_check(shmidNum, "assigning shmidNum");
 
-  int shmidTab = shmget(ftok(".",12), MAX_CONNECTIONS, 0);
-  char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
-  error_check(pipeTable, "assigning pipeTable");
-  printf("+++pipeTable: %p---\n", pipeTable);
+  int shmidTab1 = shmget(ftok(".",12), MAX_CONNECTIONS, 0);
+  char * pipeTable1 = (char *)shmat( shmidTab1, 0, 0 );
+  error_check(pipeTable1, "assigning pipeTable");
+  printf("+++pipeTable1: %p---\n", pipeTable1);
 
   printf("+++assigned shmem---\n");
 
@@ -102,12 +102,16 @@ void sub_server( int sd, int connectionNum ) {
   printf("+++forked---\n");
   
   if (f == 0){
+    int shmidTab = shmget(ftok(".",12), MAX_CONNECTIONS, 0);
+    char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
+
+    printf("+++pipeTable: %p---\n", pipeTable);
     
     char buffer[MESSAGE_BUFFER_SIZE];
     int pipes[100];
-    set_array( 0, pipes, sizeof( int ), sizeof(pipes) );
+    set_int_array( 0, pipes, sizeof(pipes) );
     printf("+++npipes cleared---\n");
-
+    
     printf("+++pipeTable: %p---\n", pipeTable);
     
     int o;
@@ -130,7 +134,7 @@ void sub_server( int sd, int connectionNum ) {
       //opening the pipes for writing
       open_pipes( pipeTable, total, pipes, connectionNum );
       
-      printf("+++pipes cleaned---\n");
+      printf("+++pipes opened---\n");
       
       read( sd, buffer, sizeof(buffer) );
       printf("+++[client %d] sent <%s>---\n", connectionNum, buffer);
@@ -190,7 +194,14 @@ void open_pipes( char * pipeTable, int * total, int * pipes, int connectionNum )
   }
 }
 
-void set_array( int value, void * array, size_t dataSize, int arrayLength ) {
-  for ( arrayLength = arrayLength * dataSize; arrayLength; array++, arrayLength-- )
-    *( (char *)array ) = value;
+void set_int_array( int value, int array[], int size){
+  int i;
+  for ( i = 0; i < size; i++)
+    array[i]= value;
+}
+
+void set_char_array( int value, char array[], int size ){
+  int i;
+  for ( i = 0; i < size; i++)
+    array[i]= value;
 }

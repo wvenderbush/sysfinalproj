@@ -10,6 +10,8 @@
 
 void open_pipes( char * pipeTable, int * total, int * pipes, int connectionNum );
 
-void set_array( int value, void * array, size_t dataSize, int arrayLength );
+void set_int_array( int value, int array[], int size );
+
+void set_char_array( int value, char aray[], int size );
 
 #endif
