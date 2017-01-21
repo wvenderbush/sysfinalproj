@@ -108,8 +108,10 @@ void sub_server( int sd, int connectionNum ) {
     printf("+++pipeTable: %p---\n", pipeTable);
     
     char buffer[MESSAGE_BUFFER_SIZE];
-    int pipes[100];
-    set_int_array( 0, pipes, sizeof(pipes) );
+    int pipes[MAX_CONNECTIONS];
+    int i;
+    for ( i = 0; i < MAX_CONNECTIONS; i++)
+      pipes[i]= 0;
     printf("+++npipes cleared---\n");
     
     printf("+++pipeTable: %p---\n", pipeTable);
