@@ -102,23 +102,24 @@ void sub_server( int sd, int connectionNum ) {
   printf("+++forked---\n");
   
   if (f == 0){
+       
+    char buffer[MESSAGE_BUFFER_SIZE];
+    int pipes[100];
+    //set_int_array( 0, pipes, sizeof(pipes) ); THIS FUNCTION IS evil
+    int o;
+    for (o = 0; o < sizeof(pipes) ; o++)
+      pipes[o]=0;
     int shmidTab = shmget(ftok(".",12), MAX_CONNECTIONS, 0);
     char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
 
-    printf("+++pipeTable: %p---\n", pipeTable);
-    
-    char buffer[MESSAGE_BUFFER_SIZE];
-    int pipes[MAX_CONNECTIONS];
-    int i;
-    for ( i = 0; i < MAX_CONNECTIONS; i++)
-      pipes[i]= 0;
+    printf("+++pipeTable: %p, \t&pipeTable: %p---\n", pipeTable, &pipeTable);
+ 
     printf("+++npipes cleared---\n");
     
-    printf("+++pipeTable: %p---\n", pipeTable);
+    printf("+++pipeTable: %p, \t&pipeTable: %p---\n", pipeTable, &pipeTable);
     
-    int o;
     for (o = 0; o < 100; o++)
-      printf("pipes[%d] = %d\n", o, pipes[o]);
+      printf("pipes[%d] = %d,\t&pipes[%d]: %p\n", o, pipes[o], o, pipes + o);
 
     for (o = 0; o < 100; o++)
       printf("pipeTable[%d] = %d\n", o, pipeTable[o]);
