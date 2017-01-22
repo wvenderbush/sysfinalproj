@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include "networking.h"
 #include "client.h"
@@ -10,6 +11,14 @@
 
 #define HEADER "   ______   ________          __\n  / ____/  / ____/ /_  ____ _/ /_\n / /      / /   / __ \\/ __ `/ __/\n/ /___   / /___/ / / / /_/ / /_\n\\____/   \\____/_/ /_/\\__,_/\\__/\n\n"
 #define UNDERLINE "----------------------------------\n\n"
+
+
+int run = 1;
+static void singhandler(int signo){
+  if (signo == SIGINT)
+    run = 0;
+}
+    
 
 int main( int argc, char *argv[] ) {
 
@@ -37,7 +46,7 @@ int main( int argc, char *argv[] ) {
   char newbuff[MESSAGE_BUFFER_SIZE];
   int f = fork();
   if (f == 0) {
-    while (1) {
+    while (run) {
       printf("%s: ", user);
       fgets( buffer, sizeof(buffer), stdin );
       
@@ -55,14 +64,16 @@ int main( int argc, char *argv[] ) {
     }
   }
   else{
-    while(1){
+    while(run){
       char buffer2[MESSAGE_BUFFER_SIZE];
       err = read ( sd, buffer2, sizeof(buffer2) );
       error_check( err, "reading from server");
       printf("\r %s\n", buffer2);
     }
   }
-
-  
-  return 0;
+  printf("[client] received exit signal, sending exit message to server\n");
+  char *exiter = "exit\n";
+  write(sd,exiter,strlen(exit));
+  wait(1);
+  exit(0);
 }
