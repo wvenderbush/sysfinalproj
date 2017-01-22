@@ -27,12 +27,15 @@ int main( int argc, char *argv[] ) {
   int err;
   signal(SIGINT, sighandler);
   char host[100];
-  char user[100];
+  char rawuser[100];
   printf("\e[1;1H\e[2J");
   printf(HEADER);
   printf(UNDERLINE);
   printf("Enter a unique username:\n\nUsername: ");
-  fgets(user, sizeof(user), stdin);
+  fgets(rawuser, sizeof(rawuser), stdin);
+  char user[100];
+  //strcat(rawuser, "::basic::"); //THIS LINE DOESN'T WORK! COLOR CODES STILL RUN OVER TO WRITTEN TEXT!
+  strcpy(user, multiParse(rawuser));
   *strchr(user, '\n') = 0;
   printf("Enter a chatroom address to connect!\n(xxx.xxx.xxx.xxx)\n\nAddress: ");
   fgets(host, sizeof(host), stdin);
@@ -49,10 +52,11 @@ int main( int argc, char *argv[] ) {
   int f = fork();
   if (f == 0) {
     while (run) {
-      printf("%s: ", user);
+      //printf("%s: ", user); //old prompt
+      printf("-----------------------\n");
       fgets( buffer, sizeof(buffer), stdin );
       strcpy(newbuff, multiParse(buffer));
-      printf("\033[1A\x1b[K%s: %s\n", user, newbuff); // deleats prompt and displays formatted message
+      printf("\033[1A\033[1A\x1b[K%s: %s", user, newbuff); // deletes prompt and displays formatted message
       char message[MESSAGE_BUFFER_SIZE];
       message[0] = 0; 
       strcat(message, user);
@@ -75,7 +79,12 @@ int main( int argc, char *argv[] ) {
       char buffer2[MESSAGE_BUFFER_SIZE];
       err = read ( sd, buffer2, sizeof(buffer2) );
       error_check( err, "reading from server");
-      printf("\r %s\n", buffer2);
+      char prompt[100];
+      strcpy(prompt, user);
+      strcat(prompt, ": ");
+      //strcat(buffer2, prompt);
+      printf("\033[1A\x1b[K%s-----------------------\n", buffer2);
+      //printf("%s\033[1A", prompt);
     }
     printf("reader exiting... \n");
     exit(1);

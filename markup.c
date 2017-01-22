@@ -103,7 +103,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~devious~~") != NULL){
 		char *mark = "~~devious~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);
@@ -192,7 +191,6 @@ char * emojiParse(char *input){
 	}
 	if (strstr(input, "~~confused~~") != NULL){
 		char *mark = "~~confused~~";
-		char output[1024];
 		char *start = strstr(input, mark);
 		char *end = start;
 		end = end + strlen(mark);

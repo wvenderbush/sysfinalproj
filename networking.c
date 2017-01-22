@@ -65,7 +65,7 @@ int client_connect( char *host ) {
   inet_aton( host, &(sock.sin_addr));
   sock.sin_port = htons( PORT );
   
-  printf("[client] connecting to: %s\n", host );
+  printf("You have connecting to: %s\n\n\n", host );
   i = connect( sd, (struct sockaddr *)&sock, sizeof(sock) );
   error_check( i, "client connect");
   
