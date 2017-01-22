@@ -89,7 +89,8 @@ void sub_server( int sd, int connectionNum ) {
   int f = fork();
   if (f == 0){
     char buffer[MESSAGE_BUFFER_SIZE];
-    int shmidEx =shmget(ftok(".", 42), sizeof(int), 0);
+    int shmidEx = shmget(ftok(".",42), sizeof(int), IPC_CREAT | 0644);
+    error_check(shmidEx, "exiting"); 
     int *exiting = (int*) shmat(shmidEx, 0, 0);
     *exiting = 1;
 
@@ -125,11 +126,18 @@ void sub_server( int sd, int connectionNum ) {
       
       read( sd, buffer, sizeof(buffer) );
       if( ! strcmp("EXIT", buffer)){
-	pipeTable[connectionNum] = 2;
+	char bye[]  = "byebye\n";
+	printf("heeello??\n");
+	int err2 =write(sd,bye,9);
+	printf("bye bye\n");
+	error_check(err2, "wtiing bye");
+	pipeTable[connectionNum] = PIPE_AFU;
 	printf("pipetable[connectionNum] = %d\n", pipeTable[connectionNum]);
 	close(pipes[connectionNum]);
 	printf("subserver exiting... \n");
 	*exiting = 0;
+	printf("exiting = %d\n", *exiting);
+	*total = *total -1;
 	exit(1);
       }
       printf("+++[client %d] sent <%s>---\n", connectionNum, buffer);
@@ -153,7 +161,7 @@ void sub_server( int sd, int connectionNum ) {
     char path[5];
     sprintf(path,".%d",connectionNum);
     int reader = open(path,O_RDONLY);
-    int shmidEx =shmget(ftok(".", 42), sizeof(int), 0);
+    int shmidEx =shmget(ftok(".", 42), sizeof(int), IPC_CREAT | 0644);
     int *exiting = (int*) shmat(shmidEx, 0, 0);
 
     while(1){
