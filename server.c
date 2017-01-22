@@ -8,16 +8,22 @@
 #include <sys/shm.h>
 #include <fcntl.h>                                                             
 #include <sys/stat.h>
-
+#include <signal.h>
 #include "server.h"
 #include "networking.h"
 
 void process( char * s );
 void sub_server( int sd, int start );
-
-
-
+int run = 1;
+static void sighandler(int signo){
+  if(signo == SIGINT){
+    run= 0;
+    fclose(stdin);
+  }
+}
+    
 int main() {
+  signal(SIGINT, sighandler);
   int shmidNum = shmget(ftok(".",14), sizeof(int), IPC_CREAT | 0644 );
   int *totalConnections = (int *)shmat( shmidNum, 0, 0 );
   int shmidTab = shmget(ftok(".",12), sizeof(char[MAX_CONNECTIONS]), IPC_CREAT | 0644 );
@@ -32,7 +38,7 @@ int main() {
 
   sd = server_setup();
   
-  while (1) {
+  while (run) {
     connection = server_connect( sd );
 
     (*totalConnections)++;
@@ -76,7 +82,15 @@ int main() {
       
     }
   }
-
+  
+  int k = 0;
+  for(k; k< MAX_CONNECTIONS; k++){
+    if( pipeTable[k] != 1){
+      char path[5];
+      sprintf(path, ".%d", k);
+      remove(path);
+    }
+  }
   int err = shmdt( totalConnections );
 
   shmctl(shmidNum,IPC_RMID,0);
