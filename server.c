@@ -17,8 +17,20 @@ void sub_server( int sd, int start );
 int run = 1;
 static void sighandler(int signo){
   if(signo == SIGINT){
+    int shmidTab = shmget(ftok(".",12), sizeof(char[MAX_CONNECTIONS]), 0);
+    char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
+
     run= 0;
     fclose(stdin);
+    int k = 0;
+    for(k; k< MAX_CONNECTIONS; k++){
+      if( pipeTable[k] != 1){
+	char path[5];
+	sprintf(path, ".%d", k);
+	remove(path);
+      }
+    }
+    exit(1);
   }
 }
     
@@ -83,14 +95,7 @@ int main() {
     }
   }
   
-  int k = 0;
-  for(k; k< MAX_CONNECTIONS; k++){
-    if( pipeTable[k] != 1){
-      char path[5];
-      sprintf(path, ".%d", k);
-      remove(path);
-    }
-  }
+
   int err = shmdt( totalConnections );
 
   shmctl(shmidNum,IPC_RMID,0);
