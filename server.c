@@ -19,6 +19,8 @@ static void sighandler(int signo){
   if(signo == SIGINT){
     int shmidTab = shmget(ftok(".",12), sizeof(char[MAX_CONNECTIONS]), 0);
     char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
+    int shmidNum = shmget(ftok(".",14), sizeof(char[MAX_CONNECTIONS]), 0);
+     int shmidEx = shmget(ftok(".",42), sizeof(int), 0);
     int k = 0;
     for(k; k< MAX_CONNECTIONS; k++){
       if( pipeTable[k] == 2){
@@ -30,6 +32,9 @@ static void sighandler(int signo){
 	return;
       }
     }
+    shmctl(shmidNum,IPC_RMID,0);
+    shmctl(shmidTab,IPC_RMID,0);
+    shmctl(shmidEx,IPC_RMID,0);
     exit(1);
   }
 }
