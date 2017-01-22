@@ -17,14 +17,10 @@
 int run = 1;
 static void sighandler(int signo){
   if (signo == SIGINT){
-    printf("signo is SIGINT\n", signo); 
     run = 0;
     fclose(stdin);
-  }else{
-    printf("signo is %d\n", signo);
   }
-}
-    
+}    
 
 int main( int argc, char *argv[] ) {
 
@@ -68,9 +64,9 @@ int main( int argc, char *argv[] ) {
       }
     }
     printf("[client] received exit signal, sending exit message to server\n");
-    char *exiter = "exit\n";
-    write(sd,exiter,strlen(exiter));
-    printf("exiting...\n");
+    char *exiter = "EXIT";
+    write(sd,exiter,5);
+    printf("writer exiting...\n");
     
     exit(1);
   }
@@ -81,6 +77,7 @@ int main( int argc, char *argv[] ) {
       error_check( err, "reading from server");
       printf("\r %s\n", buffer2);
     }
+    printf("reader exiting... \n");
     exit(1);
       
   }

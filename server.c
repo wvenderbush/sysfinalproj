@@ -20,7 +20,6 @@ void sub_server( int sd, int start );
 int main() {
   int shmidNum = shmget(ftok(".",14), sizeof(int), IPC_CREAT | 0644 );
   int *totalConnections = (int *)shmat( shmidNum, 0, 0 );
-
   int shmidTab = shmget(ftok(".",12), sizeof(char[MAX_CONNECTIONS]), IPC_CREAT | 0644 );
   char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
 
@@ -90,6 +89,9 @@ void sub_server( int sd, int connectionNum ) {
   int f = fork();
   if (f == 0){
     char buffer[MESSAGE_BUFFER_SIZE];
+    int shmidEx =shmget(ftok(".", 42), sizeof(int), 0);
+    int *exiting = (int*) shmat(shmidEx, 0, 0);
+    *exiting = 1;
 
     int pipes[MAX_CONNECTIONS];
     set_int_array( 0, pipes, MAX_CONNECTIONS );
@@ -101,6 +103,7 @@ void sub_server( int sd, int connectionNum ) {
     
     int shmidTab = shmget(ftok(".",12), MAX_CONNECTIONS, 0);
     char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
+
     printf("+++assigned shmem---\n");
     printf("+++pipeTable: %p, \t&pipeTable: %p---\n", pipeTable, &pipeTable);
     
@@ -121,6 +124,14 @@ void sub_server( int sd, int connectionNum ) {
       printf("+++pipes opened---\n");
       
       read( sd, buffer, sizeof(buffer) );
+      if( ! strcmp("EXIT", buffer)){
+	pipeTable[connectionNum] = 2;
+	printf("pipetable[connectionNum] = %d\n", pipeTable[connectionNum]);
+	close(pipes[connectionNum]);
+	printf("subserver exiting... \n");
+	*exiting = 0;
+	exit(1);
+      }
       printf("+++[client %d] sent <%s>---\n", connectionNum, buffer);
       int i;
       printf("+++[subserver %d] thinks there are %d + 1 total connections---\n", connectionNum, *total);
@@ -138,18 +149,27 @@ void sub_server( int sd, int connectionNum ) {
   
   else{
     char buffer2[MESSAGE_BUFFER_SIZE];
-
+     char buffer3[MESSAGE_BUFFER_SIZE];
     char path[5];
     sprintf(path,".%d",connectionNum);
     int reader = open(path,O_RDONLY);
-    
+    int shmidEx =shmget(ftok(".", 42), sizeof(int), 0);
+    int *exiting = (int*) shmat(shmidEx, 0, 0);
+
     while(1){
+      printf("exiting = %d\n", *exiting);
+      if (! *exiting){
+	close(reader);
+	printf("subserver2 exting..\n");
+	exit(1);
+      }
       printf("+++[subserver %d] listining...---\n", connectionNum);
       read( reader, buffer2, sizeof(buffer2) );
       printf("+++[subserver %d] recieved <%s>, sent to [client %d]---\n", connectionNum, buffer2, connectionNum);
       write(sd, buffer2, strlen(buffer2) + 1);
     }
   }
+  
  
 }
 
