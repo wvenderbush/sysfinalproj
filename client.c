@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -14,16 +15,21 @@
 
 
 int run = 1;
-static void singhandler(int signo){
-  if (signo == SIGINT)
+static void sighandler(int signo){
+  if (signo == SIGINT){
+    printf("signo is SIGINT\n", signo); 
     run = 0;
+    fclose(stdin);
+  }else{
+    printf("signo is %d\n", signo);
+  }
 }
     
 
 int main( int argc, char *argv[] ) {
 
   int err;
-  
+  signal(SIGINT, sighandler);
   char host[100];
   char user[100];
   printf("\e[1;1H\e[2J");
@@ -49,19 +55,24 @@ int main( int argc, char *argv[] ) {
     while (run) {
       printf("%s: ", user);
       fgets( buffer, sizeof(buffer), stdin );
-      
       strcpy(newbuff, multiParse(buffer));
-      
       printf("\033[1A\x1b[K%s: %s\n", user, newbuff); // deleats prompt and displays formatted message
       char message[MESSAGE_BUFFER_SIZE];
       message[0] = 0; 
       strcat(message, user);
       strcat(message, ": ");
       strcat(message, newbuff);
-      
-      err = write( sd, message, sizeof(message) );
-      error_check( err, "writing to server");
+      if(run){
+	err = write( sd, message, sizeof(message) );
+	error_check( err, "writing to server");
+      }
     }
+    printf("[client] received exit signal, sending exit message to server\n");
+    char *exiter = "exit\n";
+    write(sd,exiter,strlen(exiter));
+    printf("exiting...\n");
+    
+    exit(1);
   }
   else{
     while(run){
@@ -70,10 +81,8 @@ int main( int argc, char *argv[] ) {
       error_check( err, "reading from server");
       printf("\r %s\n", buffer2);
     }
+    exit(1);
+      
   }
-  printf("[client] received exit signal, sending exit message to server\n");
-  char *exiter = "exit\n";
-  write(sd,exiter,strlen(exit));
-  wait(1);
-  exit(0);
+
 }
