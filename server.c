@@ -99,7 +99,7 @@ void sub_server( int sd, int connectionNum ) {
     printf("+++npipes cleared---\n");
     
     int shmidNum = shmget(ftok(".",14), sizeof(int), 0);
-    int *total = (int *)shmat( shmidNum, 0, SHM_RDONLY );
+    int *total = (int *)shmat( shmidNum, 0, 0 );
     error_check(shmidNum, "assigning shmidNum");
     
     int shmidTab = shmget(ftok(".",12), MAX_CONNECTIONS, 0);
@@ -137,7 +137,9 @@ void sub_server( int sd, int connectionNum ) {
 	printf("subserver exiting... \n");
 	*exiting = 0;
 	printf("exiting = %d\n", *exiting);
+	printf("------------\nold total is %d\n" , *total);
 	*total = *total -1;
+	printf("new total is %d\n" , *total);
 	exit(1);
       }
       printf("+++[client %d] sent <%s>---\n", connectionNum, buffer);
