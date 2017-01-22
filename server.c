@@ -19,15 +19,15 @@ static void sighandler(int signo){
   if(signo == SIGINT){
     int shmidTab = shmget(ftok(".",12), sizeof(char[MAX_CONNECTIONS]), 0);
     char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
-
-    run= 0;
-    fclose(stdin);
     int k = 0;
     for(k; k< MAX_CONNECTIONS; k++){
-      if( pipeTable[k] != 1){
+      if( pipeTable[k] == 2){
 	char path[5];
 	sprintf(path, ".%d", k);
 	remove(path);
+      }else if (! pipeTable[k]){
+	printf("\n\n\n\n------\n----please quit all client processes before exting------\n--------\n\n\n\n");
+	return;
       }
     }
     exit(1);
@@ -50,7 +50,7 @@ int main() {
 
   sd = server_setup();
   
-  while (run) {
+  while (1) {
     connection = server_connect( sd );
 
     (*totalConnections)++;
