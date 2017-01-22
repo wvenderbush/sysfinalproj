@@ -87,37 +87,24 @@ int main() {
 void sub_server( int sd, int connectionNum ) {
   printf("+++[subserver %d] started---\n", connectionNum);
 
-  int shmidNum = shmget(ftok(".",14), sizeof(int), 0);
-  int *total = (int *)shmat( shmidNum, 0, SHM_RDONLY );
-  error_check(shmidNum, "assigning shmidNum");
-
-  int shmidTab1 = shmget(ftok(".",12), MAX_CONNECTIONS, 0);
-  char * pipeTable1 = (char *)shmat( shmidTab1, 0, 0 );
-  error_check(pipeTable1, "assigning pipeTable");
-  printf("+++pipeTable1: %p---\n", pipeTable1);
-
-  printf("+++assigned shmem---\n");
-
   int f = fork();
-  printf("+++forked---\n");
-  
   if (f == 0){
-       
     char buffer[MESSAGE_BUFFER_SIZE];
-    int pipes[100];
-    //set_int_array( 0, pipes, sizeof(pipes) ); THIS FUNCTION IS evil
-    int o;
-    for (o = 0; o < sizeof(pipes) ; o++)
-      pipes[o]=0;
-    int shmidTab = shmget(ftok(".",12), MAX_CONNECTIONS, 0);
-    char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
 
-    printf("+++pipeTable: %p, \t&pipeTable: %p---\n", pipeTable, &pipeTable);
- 
+    int pipes[MAX_CONNECTIONS];
+    set_int_array( 0, pipes, MAX_CONNECTIONS );
     printf("+++npipes cleared---\n");
     
+    int shmidNum = shmget(ftok(".",14), sizeof(int), 0);
+    int *total = (int *)shmat( shmidNum, 0, SHM_RDONLY );
+    error_check(shmidNum, "assigning shmidNum");
+    
+    int shmidTab = shmget(ftok(".",12), MAX_CONNECTIONS, 0);
+    char * pipeTable = (char *)shmat( shmidTab, 0, 0 );
+    printf("+++assigned shmem---\n");
     printf("+++pipeTable: %p, \t&pipeTable: %p---\n", pipeTable, &pipeTable);
     
+    int o;
     for (o = 0; o < 100; o++)
       printf("pipes[%d] = %d,\t&pipes[%d]: %p\n", o, pipes[o], o, pipes + o);
 
@@ -125,18 +112,12 @@ void sub_server( int sd, int connectionNum ) {
       printf("pipeTable[%d] = %d\n", o, pipeTable[o]);
     
     printf("+++pipeTable: %p---\n", pipeTable);
-    /*
-    int localtotal = *total;
-    error_check( localtotal, "assigning localtotal");
-    printf("+++assigned localtotal---\n");
-    */
     
     while (1) {
       printf("+++forever loop---\n");
 
       //opening the pipes for writing
       open_pipes( pipeTable, total, pipes, connectionNum );
-      
       printf("+++pipes opened---\n");
       
       read( sd, buffer, sizeof(buffer) );
@@ -173,8 +154,8 @@ void sub_server( int sd, int connectionNum ) {
 }
 
 void open_pipes( char * pipeTable, int * total, int * pipes, int connectionNum ) {
+  printf("+++[open_pipes] pipeTable: %s\ntotal: %d---\nconnectionNum: %d\n", pipeTable, *total, connectionNum);
   int i;
-  printf("+++[open_pipes] pipeTable: %s---\n", pipeTable);
   for(i = 0; i <= *total; i++){
     if( i - connectionNum ) {
       //if pipe is in use && not opened localy
@@ -184,17 +165,18 @@ void open_pipes( char * pipeTable, int * total, int * pipes, int connectionNum )
 	char path[5];
 	sprintf(path,".%d", i);
 	pipes[i] = open(path,O_WRONLY);
-	printf("+++[subserver %d] connecting to [pipe %d]---", connectionNum, i);
+	printf("+++[subserver %d] connecting to [pipe %d]---\n", connectionNum, i);
       }
       //if pipe is not in use and opened locally 
       else if ( pipeTable[i] && 
 		pipes[i] ) {
 	close( pipes[i] );
 	pipes[i] = 0;
-	printf("+++[subserver %d] disconnecting from [pipe %d]---", connectionNum, i);		
+	printf("+++[subserver %d] disconnecting from [pipe %d]---\n", connectionNum, i);		
       }
     }
   }
+  printf("+++end [open_pipes]---\n");
 }
 
 void set_int_array( int value, int array[], int size){
