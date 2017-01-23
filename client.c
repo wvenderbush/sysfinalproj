@@ -55,6 +55,16 @@ int findDLines(int width, char *message){
   return dLines;
 }   
 
+char * dLineString(int dLines){
+  char *ret = (char *) malloc(1000);
+  //strcpy(ret, NULL);
+  while (dLines != 0){
+    strcat(ret, "\033[1A\x1b[K");
+    dLines = dLines - 1;
+  }
+  return ret;
+}
+
 int main( int argc, char *argv[] ) {
   int err;
   signal(SIGINT, sighandler);
@@ -84,14 +94,14 @@ int main( int argc, char *argv[] ) {
       printf("%s\n", promptLine(getWidth()));
       fgets( buffer, sizeof(buffer), stdin );
       strcpy(newbuff, multiParse(buffer));
-      //int dLines = 2;
-      int dLines = findDLines(getWidth(), newbuff);
-      printf("\033[%dA\x1b[K%s: %s", dLines, user, newbuff); // deletes prompt and displays formatted message
       char message[MESSAGE_BUFFER_SIZE];
       message[0] = 0; 
       strcat(message, user);
       strcat(message, ": ");
       strcat(message, newbuff);
+      int dLines = findDLines(getWidth(), newbuff);
+      char *dString = dLineString(dLines);
+      printf("%s%s: %s", dString, user, newbuff); // deletes prompt and displays formatted message
       if(run){
 	err = write( sd, message, sizeof(message) );
 	error_check( err, "writing to server");

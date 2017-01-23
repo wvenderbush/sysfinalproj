@@ -6,5 +6,6 @@
 int getWidth();
 char * promptLine(int width);
 int findDLines(int width, char *message);
+char * dLineString(int dLines);
 
 #endif
