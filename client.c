@@ -26,24 +26,21 @@ static void sighandler(int signo){
 int getWidth(){
   struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-  // printf ("lines %d\n", w.ws_row);
-  // printf ("columns %d\n", w.ws_col);
   return w.ws_col;
 }
 
 char * promptLine(int width){
   char *ret = (char *) malloc(width + 1);
-  //char ret[width + 1];
+  int twidth = width;
   while (width != 0){
     strcat(ret, "_");
+    width = width - 1;
   }
-  ret[width + 1] = 0;
-  printf("%s\n", ret);
+  ret[twidth + 1] = 0;
   return ret;
 }    
 
 int main( int argc, char *argv[] ) {
-
   int err;
   signal(SIGINT, sighandler);
   char host[100];
@@ -60,8 +57,6 @@ int main( int argc, char *argv[] ) {
   printf("Enter a chatroom address to connect!\n(xxx.xxx.xxx.xxx)\n\nAddress: ");
   fgets(host, sizeof(host), stdin);
   *strchr(host, '\n') = 0;
-  
-  
    
   int sd;
 
@@ -72,8 +67,7 @@ int main( int argc, char *argv[] ) {
   int f = fork();
   if (f == 0) {
     while (run) {
-      //printf("%s: ", user); //old prompt
-      printf("-----------------------\n");
+      printf("%s\n", promptLine(getWidth()));
       fgets( buffer, sizeof(buffer), stdin );
       strcpy(newbuff, multiParse(buffer));
       printf("\033[1A\033[1A\x1b[K%s: %s", user, newbuff); // deletes prompt and displays formatted message
@@ -101,7 +95,7 @@ int main( int argc, char *argv[] ) {
       error_check( err, "reading from server");
       if( ! strcmp("EXIT", buffer2))
 	break;
-      printf("\033[1A\x1b[K%s-----------------------\n", buffer2);
+      printf("\033[1A\x1b[K%s%s\n", buffer2, promptLine(getWidth()));
     }
     printf("reader exiting... \n");
     exit(1);
