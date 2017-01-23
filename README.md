@@ -26,38 +26,38 @@ CChat comes with its own custom markup language for adding flare to your message
 CML has a collection of emojis that you can access in chatrooms by using these commands:
 CML Emoji tags begin and end with `~~`
 
-`~~smile~~` -- Inserts the `ʘ‿ʘ` emoji
-`~~shrug~~` -- Inserts the `¯\_(ツ)_/¯` emoji
-`~~scared~~` -- Inserts the `⊙﹏⊙` emoji
-`~~disapprove~~` -- Inserts the `ಠ_ಠ` emoji
-`~~cute~~` -- Inserts the `(｡◕‿◕｡)` emoji
-`~~excited~~` -- Inserts the `ヽ(*▽*)/` emoji
-`~~devious~~` -- Inserts the `ಠ‿ಠ` emoji
-`~~tableflip~~` -- Inserts the `(╯°□°）╯︵ ┻━┻` emoji
-`~~cat~~` -- Inserts the `^ᵒᴥᵒ^` emoji
-`~~fight~~` -- Inserts the `ლ(｀ー´ლ)` emoji
-`~~bear~~` -- Inserts the `ʕ•ᴥ•ʔ` emoji
-`~~blob~~` -- Inserts the `༼ つ ◕_◕ ༽つ` emoji
-`~~cry~~` -- Inserts the `ಥ_ಥ` emoji
-`~~love~~` -- Inserts the `(づ￣ ³￣)づ` emoji
-`~~confused~~` -- Inserts the `(⊙_☉)` emoji
-`~~fightme~~` -- Inserts the `(ง •̀_•́)ง` emoji
-`~~hiding~~` -- Inserts the `|_・)` emoji
-`~~sleep~~` -- Inserts the `(ᴗ˳ᴗ)` emoji
+* `~~smile~~` -- Inserts the `ʘ‿ʘ` emoji
+* `~~shrug~~` -- Inserts the `¯\_(ツ)_/¯` emoji
+* `~~scared~~` -- Inserts the `⊙﹏⊙` emoji
+* `~~disapprove~~` -- Inserts the `ಠ_ಠ` emoji
+* `~~cute~~` -- Inserts the `(｡◕‿◕｡)` emoji
+* `~~excited~~` -- Inserts the `ヽ(*▽*)/` emoji
+* `~~devious~~` -- Inserts the `ಠ‿ಠ` emoji
+* `~~tableflip~~` -- Inserts the `(╯°□°）╯︵ ┻━┻` emoji
+* `~~cat~~` -- Inserts the `^ᵒᴥᵒ^` emoji
+* `~~fight~~` -- Inserts the `ლ(｀ー´ლ)` emoji
+* `~~bear~~` -- Inserts the `ʕ•ᴥ•ʔ` emoji
+* `~~blob~~` -- Inserts the `༼ つ ◕_◕ ༽つ` emoji
+* `~~cry~~` -- Inserts the `ಥ_ಥ` emoji
+* `~~love~~` -- Inserts the `(づ￣ ³￣)づ` emoji
+* `~~confused~~` -- Inserts the `(⊙_☉)` emoji
+* `~~fightme~~` -- Inserts the `(ง •̀_•́)ง` emoji
+* `~~hiding~~` -- Inserts the `|_・)` emoji
+* `~~sleep~~` -- Inserts the `(ᴗ˳ᴗ)` emoji
 
 ####Colors
 With CML, you can also change the color of text in the chatroom by using these tags:
 CML Color tags begin and end with `::`
 
-`::red::` -- Sets the following text to red
-`::black::` -- Sets the following text to black
-`::white::` -- Sets the following text to white
-`::green::` -- Sets the following text to green
-`::yellow::` -- Sets the following text to yellow
-`::blue::` -- Sets the following text to blue
-`::magenta::` -- Sets the following text to magenta
-`::cyan::` -- Sets the following text to cyan
-`::basic::` -- Sets the following text back to the default terminal color scheme
+* `::red::` -- Sets the following text to red
+* `::black::` -- Sets the following text to black
+* `::white::` -- Sets the following text to white
+* `::green::` -- Sets the following text to green
+* `::yellow::` -- Sets the following text to yellow
+* `::blue::` -- Sets the following text to blue
+* `::magenta::` -- Sets the following text to magenta
+* `::cyan::` -- Sets the following text to cyan
+* `::basic::` -- Sets the following text back to the default terminal color scheme
 
 <hr>
 
