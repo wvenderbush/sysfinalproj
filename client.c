@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <signal.h>
+#include <sys/ioctl.h>
 
 #include "networking.h"
 #include "client.h"
@@ -20,6 +21,25 @@ static void sighandler(int signo){
     run = 0;
     fclose(stdin);
   }
+}    
+
+int getWidth(){
+  struct winsize w;
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+  // printf ("lines %d\n", w.ws_row);
+  // printf ("columns %d\n", w.ws_col);
+  return w.ws_col;
+}
+
+char * promptLine(int width){
+  char *ret = (char *) malloc(width + 1);
+  //char ret[width + 1];
+  while (width != 0){
+    strcat(ret, "_");
+  }
+  ret[width + 1] = 0;
+  printf("%s\n", ret);
+  return ret;
 }    
 
 int main( int argc, char *argv[] ) {

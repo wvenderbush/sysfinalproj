@@ -233,6 +233,16 @@ char * emojiParse(char *input){
 		strcat(output, end);
 		return output;
 	}
+	else if (strstr(input, "~~") != NULL){
+		char *mark = "~~";
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, end);
+		return output;
+	}
 
 	return input;
 }
@@ -308,6 +318,16 @@ char * colorParse(char *input){
 		start[0] = '\0';
 		strcpy(output, input);
 		strcat(output, ANSI_COLOR_RESET);
+		strcat(output, end);
+		return output;
+	}
+	else if (strstr(input, "::") != NULL){
+		char *mark = "::";
+		char *start = strstr(input, mark);
+		char *end = start;
+		end = end + strlen(mark);
+		start[0] = '\0';
+		strcpy(output, input);
 		strcat(output, end);
 		return output;
 	}
