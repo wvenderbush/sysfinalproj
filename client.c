@@ -38,7 +38,22 @@ char * promptLine(int width){
   }
   ret[twidth + 1] = 0;
   return ret;
-}    
+} 
+
+int findDLines(int width, char *message){
+  int dLines = 2;
+  int length = strlen(message);
+  if (length <= width){
+    return dLines;
+  }
+  else{
+    while (length > width){
+      length = length - width;
+      dLines = dLines + 1;
+    }
+  }
+  return dLines;
+}   
 
 int main( int argc, char *argv[] ) {
   int err;
@@ -69,7 +84,9 @@ int main( int argc, char *argv[] ) {
       printf("%s\n", promptLine(getWidth()));
       fgets( buffer, sizeof(buffer), stdin );
       strcpy(newbuff, multiParse(buffer));
-      printf("\033[1A\033[1A\x1b[K%s: %s", user, newbuff); // deletes prompt and displays formatted message
+      //int dLines = 2;
+      int dLines = findDLines(getWidth(), newbuff);
+      printf("\033[%dA\x1b[K%s: %s", dLines, user, newbuff); // deletes prompt and displays formatted message
       char message[MESSAGE_BUFFER_SIZE];
       message[0] = 0; 
       strcat(message, user);
