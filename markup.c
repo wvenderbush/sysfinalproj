@@ -5,12 +5,14 @@
 
 #include "markup.h"
 
+#define ANSI_COLOR_BLACK   "\x1b[30m"
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
 #define ANSI_COLOR_YELLOW  "\x1b[33m"
 #define ANSI_COLOR_BLUE    "\x1b[34m"
 #define ANSI_COLOR_MAGENTA "\x1b[35m"
 #define ANSI_COLOR_CYAN    "\x1b[36m"
+#define ANSI_COLOR_WHITE   "\x1b[37m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
 #define SMILE       "ʘ‿ʘ"
@@ -318,6 +320,26 @@ char * colorParse(char *input){
 		start[0] = '\0';
 		strcpy(output, input);
 		strcat(output, ANSI_COLOR_RESET);
+		strcat(output, end);
+		return output;
+	}
+	else if (strstr(input, "::white::") != NULL){
+		char *start = strstr(input, "::white::");
+		char *end = start;
+		end = end + strlen("::white::");
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, ANSI_COLOR_WHITE);
+		strcat(output, end);
+		return output;
+	}
+	else if (strstr(input, "::black::") != NULL){
+		char *start = strstr(input, "::black::");
+		char *end = start;
+		end = end + strlen("::black::");
+		start[0] = '\0';
+		strcpy(output, input);
+		strcat(output, ANSI_COLOR_BLACK);
 		strcat(output, end);
 		return output;
 	}

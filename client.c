@@ -51,9 +51,8 @@ int main( int argc, char *argv[] ) {
   printf("Enter a unique username:\n\nUsername: ");
   fgets(rawuser, sizeof(rawuser), stdin);
   char user[100];
-  //strcat(rawuser, "::basic::"); //THIS LINE DOESN'T WORK! COLOR CODES STILL RUN OVER TO WRITTEN TEXT!
+  *strchr(rawuser, '\n') = 0;
   strcpy(user, multiParse(rawuser));
-  *strchr(user, '\n') = 0;
   printf("Enter a chatroom address to connect!\n(xxx.xxx.xxx.xxx)\n\nAddress: ");
   fgets(host, sizeof(host), stdin);
   *strchr(host, '\n') = 0;
