@@ -150,7 +150,20 @@ void sub_server( int sd, int connectionNum ) {
       printf("+++pipes opened---\n");
       if( ! strcmp("EXIT", buffer)){
 	printf("+++[client %d] exiting---\n", connectionNum);
-	
+	int i;
+	for( i = 0; i <= *total; i++){
+	  if ( i - connectionNum &&
+	       pipes[i] &&
+	       !pipeTable[i]
+	       ) { // if i != connectionNum
+	    write( pipes[i], "BYE", strlen("BYE") + 1);    
+	    printf("+++[subserver %d] sent <%s> to [subserver %d]---\n", connectionNum, "BYE", i);
+	    close(pipes[i]);
+	    pipes[i] = 0;
+	    printf("+++[subserver %d] closed pipe to [subserver %d]---\n", connectionNum, i);
+	  }
+
+	}
 	int err2 =write(sd, "EXIT" , strlen("EXIT") + 1);//write message to client
 	printf("+++sent exit conformation to [client %d]---\n", connectionNum);
 	error_check(err2, "writingng bye");
@@ -166,7 +179,6 @@ void sub_server( int sd, int connectionNum ) {
 	printf("[subserver %d from-client] exiting... \n", connectionNum);
 	*total = *total -1;//decremnt total
 
-	open_pipes( pipeTable, total, pipes, connectionNum );
 	exit(1);//exit
 	
       }
@@ -203,6 +215,11 @@ void sub_server( int sd, int connectionNum ) {
 	close( reader );
 	close( sd );
 	exit(0);
+      }
+      if (! strcmp(buffer2, "BYE")) {
+	printf("someone is exiting... \n");
+	wait(1);
+	printf("done wating\n");
       }
       
       printf("+++[subserver %d] recieved <%s>, sent to [client %d]---\n", connectionNum, buffer2, connectionNum);
