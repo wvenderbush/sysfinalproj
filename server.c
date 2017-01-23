@@ -22,7 +22,7 @@ static void sighandler(int signo){
     int shmidNum = shmget(ftok(".",14), sizeof(char[MAX_CONNECTIONS]), 0);
      int shmidEx = shmget(ftok(".",42), sizeof(int), 0);
     int k = 0;
-    for(k; k< MAX_CONNECTIONS; k++){//check every pipe
+    for( ; k< MAX_CONNECTIONS; k++){//check every pipe
       if( pipeTable[k] == 2){//if it exists and isnt being used, delte
 	char path[5];
 	sprintf(path, ".%d", k);
@@ -144,63 +144,67 @@ void sub_server( int sd, int connectionNum ) {
     while (1) {
       printf("+++forever loop---\n");
 
+      read( sd, buffer, sizeof(buffer) );
       //opening the pipes for writing
       open_pipes( pipeTable, total, pipes, connectionNum );
       printf("+++pipes opened---\n");
-      
-      read( sd, buffer, sizeof(buffer) );
       if( ! strcmp("EXIT", buffer)){
-	char bye[]  = "byebye\n";//define message to ssend back to client
-	printf("heeello??\n");
-	int err2 =write(sd,bye,9);//write message to client
-	printf("bye bye\n");
-	error_check(err2, "wtiing bye");
+	printf("+++[client %d] exiting---\n", connectionNum);
+	
+	int err2 =write(sd, "EXIT" , strlen("EXIT") + 1);//write message to client
+	printf("+++sent exit conformation to [client %d]---\n", connectionNum);
+	error_check(err2, "writingng bye");
+
 	char path[5];
 	sprintf(path, ".%d", connectionNum);
 	int rd = open(path, O_WRONLY);
-	write(rd, "bybyy\n",8);
+	write(rd, "EXIT",strlen("EXIT") + 1);
 	close(rd);
 	pipeTable[connectionNum] = PIPE_AFU;//set the pipe in pipetable
-	printf("pipetable[connectionNum] = %d\n", pipeTable[connectionNum]);
-	printf("subserver exiting... \n");
-	*exiting = 0;//set the value of exiting to 0(for the other subserver);
-	printf("exiting = %d\n", *exiting);
-	printf("------------\nold total is %d\n" , *total);
+	
+	close( sd );
+	printf("[subserver %d from-client] exiting... \n", connectionNum);
 	*total = *total -1;//decremnt total
-	printf("new total is %d\n" , *total);
+
+	open_pipes( pipeTable, total, pipes, connectionNum );
 	exit(1);//exit
+	
       }
-      printf("+++[client %d] sent <%s>---\n", connectionNum, buffer);
-      int i;
-      printf("+++[subserver %d] thinks there are %d + 1 total connections---\n", connectionNum, *total);
-      for( i = 0; i <= *total; i++){
-	if ( i - connectionNum &&
-	     pipes[i] &&
-	     !pipeTable[i]
-	     ) { // if i != connectionNum
-	  write( pipes[i], buffer, strlen(buffer) + 1);    
-	  printf("+++[subserver %d] sent <%s> to [subserver %d]---\n", connectionNum, buffer, i);
+      else { //client did not try to exit
+	printf("+++[client %d] sent <%s>---\n", connectionNum, buffer);
+	int i;
+	printf("+++[subserver %d] thinks there are %d + 1 total connections---\n", connectionNum, *total);
+	for( i = 0; i <= *total; i++){
+	  if ( i - connectionNum &&
+	       pipes[i] &&
+	       !pipeTable[i]
+	       ) { // if i != connectionNum
+	    write( pipes[i], buffer, strlen(buffer) + 1);    
+	    printf("+++[subserver %d] sent <%s> to [subserver %d]---\n", connectionNum, buffer, i);
+	  }
 	}
       }
     }
+    
   }
   
   else{
     char buffer2[MESSAGE_BUFFER_SIZE];
-     char buffer3[MESSAGE_BUFFER_SIZE];
+    char buffer3[MESSAGE_BUFFER_SIZE];
     char path[5];
     sprintf(path,".%d",connectionNum);
     int reader = open(path,O_RDONLY);
     while(1){
-      printf("exiting = %d\n", *exiting);//read exting
-      if (! *exiting){//if the other subserver sent exiting, then its good to exit
-	close(reader);//close connection
-	printf("subserver2 exting..\n");//exit
-	shmctl(shmidEx,IPC_RMID,0);//remove shm
-	exit(1);
-      }
       printf("+++[subserver %d] listining...---\n", connectionNum);
       read( reader, buffer2, sizeof(buffer2) );
+
+      if (! strcmp(buffer2, "EXIT")) {
+	printf("[subserver %d to-client] exiting\n", connectionNum);
+	close( reader );
+	close( sd );
+	exit(0);
+      }
+      
       printf("+++[subserver %d] recieved <%s>, sent to [client %d]---\n", connectionNum, buffer2, connectionNum);
       write(sd, buffer2, strlen(buffer2) + 1);
     }

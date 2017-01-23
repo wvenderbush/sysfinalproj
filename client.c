@@ -79,12 +79,9 @@ int main( int argc, char *argv[] ) {
       char buffer2[MESSAGE_BUFFER_SIZE];
       err = read ( sd, buffer2, sizeof(buffer2) );
       error_check( err, "reading from server");
-      char prompt[100];
-      strcpy(prompt, user);
-      strcat(prompt, ": ");
-      //strcat(buffer2, prompt);
+      if( ! strcmp("EXIT", buffer2))
+	break;
       printf("\033[1A\x1b[K%s-----------------------\n", buffer2);
-      //printf("%s\033[1A", prompt);
     }
     printf("reader exiting... \n");
     exit(1);
