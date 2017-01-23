@@ -23,8 +23,7 @@ CChat is a comprehensive chatroom program written in C. Users can host a server 
 CChat comes with its own custom markup language for adding flare to your messages! You can use the markup language in any message or even when creating your username!
 
 ####Emojis
-CML has a collection of emojis that you can access in chatrooms by using these commands:
-CML Emoji tags begin and end with `~~`
+CML has a collection of emojis that you can access in chatrooms by tags that begin and end with `~~`. The tags are as follows:
 
 * `~~smile~~` -- Inserts the `ʘ‿ʘ` emoji
 * `~~shrug~~` -- Inserts the `¯\_(ツ)_/¯` emoji
@@ -46,8 +45,7 @@ CML Emoji tags begin and end with `~~`
 * `~~sleep~~` -- Inserts the `(ᴗ˳ᴗ)` emoji
 
 ####Colors
-With CML, you can also change the color of text in the chatroom by using these tags:
-CML Color tags begin and end with `::`
+With CML, you can also change the color of text in the chatroom by using tags that begin and end with `::`. The tags are as follows:
 
 * `::red::` -- Sets the following text to red
 * `::black::` -- Sets the following text to black
