@@ -70,8 +70,8 @@ With CML, you can also change the color of text in the chatroom by using tags th
 <hr>
 
 ###Known Bugs
-1. When multiple clients connect, for example three, if the middle client closes, the first and last client may have trouble sending or recieving messages unless another client joins to take the old client's place
-2. Sometimes the server may have a bugsplat/messy exit. If this happens, you can easily reset the server interface by following these steps.
+1. When multiple clients connect and one disconnects, certain clients might not receive messages until the other client reconnects
+2. Sometimes the server has a messy exit if a user closes clients rapidly. If this happens, you can easily reset the server interface by following these steps.
   1. Stop the server. Press `CTRL + C` repeatedly until the server stops.
   2. Enter `$ ls -a` into your terminal to see all files in the directory.
   3. Remove all files of this format: .# where # is any number (for example: `$ rm .0`)
