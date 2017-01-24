@@ -158,8 +158,8 @@ void sub_server( int sd, int connectionNum ) {
 	       ) { // if i != connectionNum
 	    int peeeyedee = getpid();
 	    char p[15];
-	    write( pipes[i], "BYE", strlen("BYE") + 1);    
-	    printf("+++[subserver %d] sent <%s> to [subserver %d]---\n", connectionNum, "BYE", i);
+	    write( pipes[i], "BYE\n", strlen("BYE\n") + 1);    
+	    printf("+++[subserver %d] sent <%s> to [subserver %d]---\n", connectionNum, "BYE\n", i);
 	    close(pipes[i]);
 	    pipes[i] = 0;
 	    printf("+++[subserver %d] closed pipe to [subserver %d]---\n", connectionNum, i);
@@ -218,7 +218,7 @@ void sub_server( int sd, int connectionNum ) {
 	close( sd );
 	exit(0);
       }
-      if (! strcmp(buffer2, "BYE")) {
+      if (! strcmp(buffer2, "BYE\n")) {
 	close(reader);
 	printf("someone is exiting... \n");
 	sleep(1);
