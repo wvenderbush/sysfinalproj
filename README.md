@@ -70,15 +70,16 @@ With CML, you can also change the color of text in the chatroom by using tags th
 <hr>
 
 ###Known Bugs
-1. When multiple clients connect and one disconnects, certain clients might not receive messages until the other client reconnects
-2. Sometimes the server has a messy exit if a user closes clients rapidly. If this happens, you can easily reset the server interface by following these steps.
+1. When multiple clients connect and one disconnects, certain clients might not receive messages until a new client connects. To resolve this bug, create another client and connect to the server, then quit it, and messages should flow normally
+2. Sometimes the server has a messy exit if a user closes clients rapidly, resulting in error 17 - fifo already exists. If this happens, you can easily reset the server interface by following these steps.
   1. Stop the server. Press `CTRL + C` repeatedly until the server stops.
   2. Enter `$ ls -a` into your terminal to see all files in the directory.
   3. Remove all files of this format: .# where # is any number (for example: `$ rm .0`)
   4. Restart the server using `$ ./server`
   5. Your server should restart cleanly. If it does not, give the socket time to naturally close and try again.
-  
-
+3. Exting clients with anything other than CTRL-C will crash the server
+4. Exiting the server with anything other than CTRL-C will crash all the client
+5. If a client is typing and a message is sent, that client displays a white bar before the message.
 <hr>
 
 We hope you enjoy using CChat!
