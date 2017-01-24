@@ -117,7 +117,7 @@ int main( int argc, char *argv[] ) {
       strcat(message, newbuff);
       int dLines = findDLines(getWidth(), newbuff);
       char *dString = dLineString(dLines);
-      printf("%s%s: %s", dString, user, newbuff); // deletes prompt and displays formatted message
+      printf("%s%s: %s", dString, user, newbuff);
       if(run){
 	err = write( sd, message, sizeof(message) );
 	error_check( err, "writing to server");
