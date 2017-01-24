@@ -12,7 +12,6 @@
 
 
 #define HEADER "   ______   ________          __\n  / ____/  / ____/ /_  ____ _/ /_\n / /      / /   / __ \\/ __ `/ __/\n/ /___   / /___/ / / / /_/ / /_\n\\____/   \\____/_/ /_/\\__,_/\\__/\n\n"
-#define UNDERLINE "----------------------------------\n\n"
 
 
 int run = 1;
@@ -27,6 +26,12 @@ int getWidth(){
   struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
   return w.ws_col;
+}
+
+int getHeight(){
+  struct winsize w;
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+  return w.ws_row;
 }
 
 char * promptLine(int width){
@@ -57,7 +62,6 @@ int findDLines(int width, char *message){
 
 char * dLineString(int dLines){
   char *ret = (char *) malloc(1000);
-  //strcpy(ret, NULL);
   while (dLines != 0){
     strcat(ret, "\033[1A\x1b[K");
     dLines = dLines - 1;
@@ -65,14 +69,23 @@ char * dLineString(int dLines){
   return ret;
 }
 
+void printClear(int height){
+  height = height - 10;
+  while (height > 0){
+    printf("\n");
+    height = height - 1;
+  }
+}
+
 int main( int argc, char *argv[] ) {
   int err;
   signal(SIGINT, sighandler);
+  printf("%d", getHeight());
   char host[100];
   char rawuser[100];
   printf("\e[1;1H\e[2J");
   printf(HEADER);
-  printf(UNDERLINE);
+  printf("%s\n\n", promptLine(getWidth()));
   printf("Enter a unique username:\n\nUsername: ");
   fgets(rawuser, sizeof(rawuser), stdin);
   char user[100];
@@ -89,6 +102,9 @@ int main( int argc, char *argv[] ) {
   char buffer[MESSAGE_BUFFER_SIZE];
   char newbuff[MESSAGE_BUFFER_SIZE];
   int f = fork();
+  printf(HEADER);
+  printf("%s\n", promptLine(getWidth()));
+  printClear(getHeight());
   if (f == 0) {
     while (run) {
       printf("%s\n", promptLine(getWidth()));
