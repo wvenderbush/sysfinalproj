@@ -59,6 +59,11 @@ With CML, you can also change the color of text in the chatroom by using tags th
 
 <hr>
 
+###Known Bugs
+1.
+
+<hr>
+
 We hope you enjoy using CChat!
 
 
